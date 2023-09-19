@@ -1,0 +1,14 @@
+name: Admin - Bump Major Version
+on:
+  workflow_dispatch:
+    inputs:
+      product:
+        description: 'Type product name to generate release page'
+        required: true
+        default: 'kungfu-trader'
+
+jobs:
+  bump:
+    uses: kungfu-trader/workflows/.github/workflows/.sync-release-page.yml@v1
+    with:
+      product: ${{ github.event.inputs.product }}
