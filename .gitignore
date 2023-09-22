@@ -4,3 +4,7 @@
 
 # NPM related
 node_modules/
+
+# build related
+build/
+dist/

@@ -4,15 +4,12 @@ description: "Generate Release Page for Kungfu Products"
 inputs:
   token:
     description: "GitHub token"
-  repo:
-    description: "Do not add comment to GitHub [true/false]"
-    default: "false"
-  preview-files:
-    description: "Pattern for preview file names"
-    default: ".*"
-  max-preview-links:
-    description: "Max number of preview links"
-    default: "32"
+  product:
+    description: "Kungfu Product"
+    default: "kungfu-trader"
+  release-path:
+    description: "Release Path for URL"
+    default: "static"
 runs:
   using: "node16"
   main: "dist/index.js"
