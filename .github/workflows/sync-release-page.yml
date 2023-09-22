@@ -1,4 +1,4 @@
-name: Admin - Bump Major Version
+name: Sync - Release Page
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +8,7 @@ on:
         default: 'kungfu-trader'
 
 jobs:
-  bump:
-    uses: kungfu-trader/workflows/.github/workflows/.sync-release-page.yml@v1
+  sync-release-page:
+    uses: kungfu-trader/workflows/.github/workflows/.sync-release-page.yml@dev/v1/v1.2
     with:
       product: ${{ github.event.inputs.product }}
