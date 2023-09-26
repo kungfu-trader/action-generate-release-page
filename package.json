@@ -7,6 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "yarn format && yarn dist",
+    "clean": "rimraf build",
     "dist": "ncc build index.js",
     "format": "prettier --write --parser typescript \"*.js\"",
     "lint": "eslint --ext .js ."
@@ -25,6 +26,7 @@
     "@vercel/ncc": "^0.38.0",
     "eslint": "^8.49.0",
     "prettier": "^3.0.0",
-    "prettier-eslint-cli": "^7.1.0"
+    "prettier-eslint-cli": "^7.1.0",
+    "rimraf": "^5.0.4"
   }
 }
