@@ -12,3 +12,4 @@ jobs:
     uses: kungfu-trader/workflows/.github/workflows/.sync-release-page.yml@dev/v1/v1.2
     with:
       product: ${{ github.event.inputs.product }}
+      release-path: test
