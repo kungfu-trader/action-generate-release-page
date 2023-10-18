@@ -14,6 +14,7 @@ const mustache = __nccwpck_require__(8272);
 const baseUrl = "https://releases.kungfu-trader.com";
 
 exports.generate = (argv) => {
+  console.log(`Generating release page for ${argv.product}`);
   const template = fs.readFileSync(
     __nccwpck_require__.ab + "release.html",
     "utf-8",
@@ -26,6 +27,7 @@ exports.generate = (argv) => {
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
+  console.log(`Writing release page to ${outputDir}`);
   const fileName = path.join(outputDir, "index.html");
   fs.writeFileSync(fileName, output);
 };
