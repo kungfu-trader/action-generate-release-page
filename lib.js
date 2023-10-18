@@ -19,6 +19,8 @@ exports.generate = (argv) => {
   });
   const outputDir = path.join(
     process.cwd(),
+    "dist",
+    argv.product,
     "build",
     "stage",
     argv.releasePath,

@@ -23,7 +23,14 @@ exports.generate = (argv) => {
     kungfuTraderUrl: `${baseUrl}/${argv.product}/release-stable.html`,
     artifactKungfuUrl: `${baseUrl}/artifact-kungfu/release-stable.html`,
   });
-  const outputDir = __nccwpck_require__.ab + "stage/" + argv.releasePath;
+  const outputDir = path.join(
+    process.cwd(),
+    "dist",
+    argv.product,
+    "build",
+    "stage",
+    argv.releasePath,
+  );
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
