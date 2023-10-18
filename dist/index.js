@@ -29,6 +29,7 @@ exports.generate = (argv) => {
   }
   console.log(`Writing release page to ${outputDir}`);
   const fileName = path.join(outputDir, "index.html");
+  console.log(`Writing release page to ${fileName}`);
   fs.writeFileSync(fileName, output);
 };
 
