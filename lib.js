@@ -18,7 +18,6 @@ exports.generate = (argv) => {
     artifactKungfuUrl: `${baseUrl}/artifact-kungfu/release-stable.html`,
   });
   const outputDir = path.join(
-    process.cwd(),
     "dist",
     argv.product,
     "build",
