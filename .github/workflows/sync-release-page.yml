@@ -6,9 +6,14 @@ on:
         description: 'Type product name to generate release page'
         required: true
         default: 'kungfu-trader'
+      release-path:
+        description: 'Type product name to generate release page'
+        required: true
+        default: 'static/action-generate-release-page'
 
 jobs:
   sync-release-page:
     uses: kungfu-trader/workflows/.github/workflows/.sync-release-page.yml@dev/v1/v1.2
     with:
       product: ${{ github.event.inputs.product }}
+      release-path: ${{ github.event.inputs.release-path }}
