@@ -11,7 +11,7 @@ exports.generate = (argv) => {
   console.log(`Generating release page for ${argv.product}`);
   const template = fs.readFileSync(
     path.join(__dirname, "templates", "release.html"),
-    "utf-8",
+    "utf-8"
   );
   const output = mustache.render(template, {
     kungfuTraderUrl: `${baseUrl}/${argv.product}/release-stable.html`,
@@ -22,7 +22,7 @@ exports.generate = (argv) => {
     argv.product,
     "build",
     "stage",
-    argv.releasePath,
+    argv.releasePath
   );
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
