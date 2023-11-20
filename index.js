@@ -9,6 +9,8 @@ const main = function () {
     token: core.getInput("token"),
     product: core.getInput("product"),
     releasePath: core.getInput("release-path"),
+    lowerEdge: core.getInput("lower-edge"),
+    upperEdge: core.getInput("upper-edge"),
   };
   lib.generate(argv);
 };

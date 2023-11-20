@@ -91,9 +91,41 @@
             </div>
         </div>
         <h4 style="margin-top: 1em;">stables</h4>
-        <div class="list-group" style="margin-top: 1.2em;" id="stables-list"></div>
+        <div class="list-group" style="margin-top: 1.2em;" id="stables-list">
+            {{#stables}}
+            <a href="{{{url}}}" class="list-group-item list-group-item-action" aria-current="true">
+                <div class="release-item">
+                    <div class="release-item-left">{{version}}</div>
+                    {{#coreUrl}}
+                    <div class="release-item-right">
+                        <div data-href="{{{coreUrl}}}" class="core-link">
+                            <span>kungfu-core</span>
+                            <span class="badge rounded-pill bg-primary">{{coreVersion}}</span>
+                        </div>
+                    </div>
+                    {{/coreUrl}}
+                </div>
+            </a>
+            {{/stables}}
+        </div>
         <h4 style="margin-top: 2em;">prereleases</h4>
-        <div class="list-group" style="margin-top: 1.2em;" id="prereleases-list"></div>
+        <div class="list-group" style="margin-top: 1.2em;" id="prereleases-list">
+            {{#prereleases}}
+            <a href="{{{url}}}" class="list-group-item list-group-item-action" aria-current="true">
+                <div class="release-item">
+                    <div class="release-item-left">{{version}}</div>
+                    {{#coreUrl}}
+                    <div class="release-item-right">
+                        <div data-href="{{{coreUrl}}}" class="core-link">
+                            <span>kungfu-core</span>
+                            <span class="badge rounded-pill bg-primary">{{coreVersion}}</span>
+                        </div>
+                    </div>
+                    {{/coreUrl}}
+                </div>
+            </a>
+            {{/prereleases}}
+        </div>
     </div>
     <footer class="footer">
         版权所有 © 北京功夫源科技发展有限责任公司 |
@@ -104,27 +136,13 @@
         const baseRepo = "kungfu-trader";
 
         window.onload = function () {
-            fetch('https://releases.kungfu-trader.com/kungfu-trader/metadata.txt')
-                .then(res => res.text())
-                .then(res => {
-                    const { stables, prereleases } = formatMetadata(res);
-                    const stablesFragment = stables.reduce((acc, cur) => acc + generateItem(cur), '');
-                    const prereleasesFragment = prereleases.reduce(
-                        (acc, cur) => acc + cur.items.reduce((accx, curx) => accx + generateItem(curx), ''),
-                        '');
-                    document.getElementById('stables-list').innerHTML = stablesFragment;
-                    document.getElementById('prereleases-list').innerHTML = prereleasesFragment;
+            document.querySelectorAll('.core-link').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    location.href = item.getAttribute('data-href');
                 })
-                .then(() => {
-                    document.querySelectorAll('.core-link').forEach(item => {
-                        item.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            location.href = item.getAttribute('data-href');
-                        })
-                    });
-                })
-                .catch(e => console.error(e))
+            });
         }
 
         const generateItem = (obj) => {
@@ -142,66 +160,6 @@
                     </div>
                 </a>
             `
-        };
-        const formatMetadata = (text) => {
-            const metadata = text.split('\n').filter(v => !!v).map(v => {
-                const target = JSON.parse(v)
-                const version = encodeURI(target.version);
-                const coreVersion = encodeURI((target.coreVersion || target.dependencies)["@kungfu-trader/kungfu-core"]);
-                return {
-                    version,
-                    coreVersion,
-                    url: `${baseUrl}${baseRepo}/${getCurrentVersion(version)}/index.html`,
-                    coreUrl: `${baseUrl}artifact-kungfu/${getCurrentVersion(
-                        "v" + coreVersion
-                    )}/index.html`,
-                };
-            });
-            return {
-                stables: _.sortBy(
-                    metadata.filter((v) => !v.version.includes("-alpha")),
-                    (v) => getWeightingNumber(v.version.slice(1), metadata.length)
-                ),
-                prereleases: groupItems(
-                    metadata.filter((v) => v.version.includes("-alpha")),
-                    (v) => v.version.replace(/-alpha.\d+/, "")
-                ),
-            }
-        }
-
-        const getCurrentVersion = (version) => {
-            return `${version.split(".")[0]}/${version}`;
-        };
-
-        const getWeightingNumber = (name, len) => {
-            const [v1, v2, v3, v4] = name.replace("-alpha", "").split(".");
-            if (v4) {
-                return (v4 === "html" ? len : +v4) * -1;
-            }
-            return (v1 * len * 100 + v2 * len + +v3) * -1;
-        };
-
-        const groupItems = (items, hander) => {
-            const result = items.reduce((acc, cur) => {
-                const key = hander(cur);
-                const target = acc.find((v) => v.key === key);
-                target
-                    ? target.items.push(cur)
-                    : acc.push({
-                        key,
-                        items: [cur],
-                    });
-                return acc;
-            }, []);
-            result.forEach(
-                (e) =>
-                (e.items = _.sortBy(e.items, (v) =>
-                    getWeightingNumber(v.version.slice(1), e.items.length)
-                ))
-            );
-            return _.sortBy(result, (v) =>
-                getWeightingNumber(v.key.slice(1), result.length)
-            );
         };
     </script>
 </body>
