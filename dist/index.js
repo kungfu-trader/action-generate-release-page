@@ -28,7 +28,10 @@ exports.generate = async (argv) => {
   );
   const { stables, prereleases } = await getVersionList(argv);
   const output = mustache.render(template, {
-    title: "",
+    title: argv.product,
+    product: argv.product,
+    description:
+      "Kungfu Trader is a trading platform for quantitative trading.",
     kungfuTraderUrl: `${baseUrl}/${argv.product}/release-stable.html`,
     artifactKungfuUrl: `${baseUrl}/artifact-kungfu/release-stable.html`,
     stables,
