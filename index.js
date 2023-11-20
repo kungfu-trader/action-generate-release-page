@@ -11,6 +11,9 @@ const main = function () {
     releasePath: core.getInput("release-path"),
     lowerEdge: core.getInput("lower-edge"),
     upperEdge: core.getInput("upper-edge"),
+    apiKey: core.getInput("apiKey"),
+    baseId: core.getInput("base-id"),
+    baseUrl: core.getInput("release-url"),
   };
   lib.generate(argv);
 };

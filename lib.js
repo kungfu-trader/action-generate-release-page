@@ -5,8 +5,8 @@ const mustache = require("mustache");
 const axios = require("axios");
 const sortBy = require("lodash.sortby");
 const { spawnSync } = require("child_process");
+const { getTableRecords } = require("./airtable");
 
-const baseUrl = "https://releases.kungfu-trader.com";
 const spawnOpts = {
   shell: true,
   stdio: "pipe",
@@ -22,12 +22,12 @@ exports.generate = async (argv) => {
   );
   const { stables, prereleases } = await getVersionList(argv);
   const output = mustache.render(template, {
-    title: argv.product,
+    title: `${argv.product}`,
     product: argv.product,
     description:
       "Kungfu Trader is a trading platform for quantitative trading.",
-    kungfuTraderUrl: `${baseUrl}/${argv.product}/release-stable.html`,
-    artifactKungfuUrl: `${baseUrl}/artifact-kungfu/release-stable.html`,
+    kungfuTraderUrl: `${argv.baseUrl}/${argv.product}/release-stable.html`,
+    artifactKungfuUrl: `${argv.baseUrl}/artifact-kungfu/release-stable.html`,
     stables,
     prereleases,
   });
@@ -76,7 +76,7 @@ const getVersionList = async (argv) => {
         acc[version.includes("alpha") ? "prereleases" : "stables"].push({
           ...meta,
           version,
-          url: `${baseUrl}/${argv.product}/${getCurrentVersion(
+          url: `${argv.baseUrl}/${argv.product}/${getCurrentVersion(
             version
           )}/index.html`,
           weight: getWeightingNumber(version, versions.length),
@@ -91,31 +91,37 @@ const getVersionList = async (argv) => {
   };
 };
 
-const getMetaData = (argv) => {
-  return axios
-    .get(`${baseUrl}/${argv.product}/metadata.txt`)
-    .then((res) => {
-      return res.data
-        .split("\n")
-        .filter((v) => !!v)
-        .map((v) => {
-          const target = JSON.parse(v);
-          const version = encodeURI(target.version);
-          const coreVersion = encodeURI(
-            (target.coreVersion || target.dependencies)[
-              "@kungfu-trader/kungfu-core"
-            ]
-          );
-          return {
-            version,
-            coreVersion: `v${coreVersion}`,
-            coreUrl: `${baseUrl}/artifact-kungfu/${getCurrentVersion(
-              "v" + coreVersion
-            )}/index.html`,
-          };
-        });
-    })
-    .catch(() => []);
+const getMetaData = async (argv) => {
+  if (!argv.apiKey || !argv.baseId) {
+    return;
+  }
+  const res = await getTableRecords({
+    apiKey: argv.apiKey,
+    baseId: argv.baseId,
+    tableId: "pr dependencies",
+    params: {
+      filterByFormula: `AND(
+          {name} = "${argv.product}"
+        )`,
+    },
+  });
+  if (Array.isArray(res)) {
+    return res.map((v) => {
+      const version = `v${v.version}`;
+      const coreVersion = JSON.parse(v.dependencies)[
+        "@kungfu-trader/kungfu-core"
+      ];
+      return {
+        version,
+        coreVersion: coreVersion ? `v${coreVersion}` : null,
+        coreUrl: coreVersion
+          ? `${argv.baseUrl}/artifact-kungfu/${getCurrentVersion(
+              `v${coreVersion}`
+            )}/index.html`
+          : null,
+      };
+    });
+  }
 };
 
 const getListFromS3 = (source) => {

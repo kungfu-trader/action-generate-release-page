@@ -17,6 +17,7 @@
     "@actions/github": "^5.1.0",
     "axios": "^1.6.2",
     "glob": "^10.3.0",
+    "lodash.chunk": "^4.2.0",
     "lodash.sortby": "^4.7.0",
     "mustache": "^4.2.0",
     "semver": "^7.5.4",

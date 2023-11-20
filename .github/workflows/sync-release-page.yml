@@ -9,13 +9,17 @@ on:
       release-path:
         description: 'Type product name to generate release page'
         required: true
-        default: 'static/action-generate-release-page'
+        default: 'static'
       lower-edge:
         description: 'filter version >= lower-edge value'
         required: false
       upper-edge:
         description: 'filter version <= upper-edge value'
         required: false
+      release-url:
+          description: 'release page base url'
+          default: 'https://releases.kungfu-trader.com'
+          required: true
 
 jobs:
   sync-release-page:
@@ -25,3 +29,4 @@ jobs:
       release-path: ${{ github.event.inputs.release-path }}
       lower-edge: ${{ github.event.inputs.lower-edge }}
       upper-edge: ${{ github.event.inputs.upper-edge }}
+      release-url: ${{ github.event.inputs.release-url }}
