@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previous Release | {{title}}</title>
+    <title>Previous Release | {{product}}</title>
     <meta name="theme-color" content="#e9ecef">
     <link href="https://cdn.staticfile.org/layui/2.8.18/css/layui.min.css" rel="stylesheet">
     <script src="https://cdn.staticfile.org/layui/2.8.18/layui.min.js"></script>
@@ -71,7 +71,33 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
             height: 100%;
+        }
+
+        .nav-menu {
+            white-space: nowrap;
+        }
+
+        .nav-menu-item {
+            display: inline-block;
+            line-height: 80px;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .nav-menu-item a {
+            display: inline-block;
+            padding: 0 17px;
+            font-size: 17px;
+            color: #ffffff;
+            font-weight: 700;
+            transition: all .3s ease;
+        }
+
+        .nav-menu-item a:hover {
+            transform: scale(1.2);
+            color: #F2BA02;
         }
 
         .card-text {
@@ -114,9 +140,10 @@
                     src="https://s3.cn-northwest-1.amazonaws.com.cn/dev.kungfu-trader.com/uploads/2023/11/cropped-功夫量化图标-官网_7-300x62.png"
                     class="custom-logo" alt="功夫量化">
             </a>
-            <div>
-                <!-- <a href="https://www.kungfu-trader.com/" target="_blank" style="font-size: 1.2rem;">Website</a> -->
-            </div>
+            <nav class="nav-menu">
+                <span class="nav-menu-item"><a target="_blank" href="https://docs.kungfu-trader.com/">功夫文档</a></span>
+                <span class="nav-menu-item"><a href="https://www.kungfu-trader.com/">返回首页</a></span>
+            </nav>
         </div>
     </header>
     <div class="container panel">
@@ -130,11 +157,13 @@
                             style="margin: .5em">Check
                             {{product}} Releases</a>
                     </button>
+                    {{#artifactKungfuUrl}}
                     <button type="button" class="layui-btn layui-bg-blue">
-                        <a href="{{baseUrl}}/artifact-kungfu/release-stable.html" target="_blank"
-                            class="btn btn-primary" style="margin: .5em">Check
+                        <a href="{{{artifactKungfuUrl}}}" target="_blank" class="btn btn-primary"
+                            style="margin: .5em">Check
                             artifact-kungfu Releases</a>
                     </button>
+                    {{/artifactKungfuUrl}}
                 </div>
             </div>
         </div>
@@ -152,8 +181,8 @@
     <script>
         const createTables = (data, elem) => {
             layui.use('table', function () {
-                var treeTable = layui.treeTable;
-                var inst = treeTable.render({
+                const treeTable = layui.treeTable;
+                const inst = treeTable.render({
                     elem,
                     tree: {
                         customName: {
@@ -194,7 +223,7 @@
                     page: false
                 });
             });
-        }
+        };
 
         function init() {
             const stables = JSON.parse('{{{stables}}}');
@@ -203,7 +232,7 @@
             createTables(prereleases, '#prereleases-table');
             setTimeout(() => document.getElementById('table-container').style.opacity = 1);
         }
-        init()
+        init();
     </script>
 </body>
 

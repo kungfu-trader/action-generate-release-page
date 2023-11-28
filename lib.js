@@ -17,12 +17,10 @@ exports.generate = async (argv) => {
     return;
   }
   const output = mustache.render(template, {
-    title: `${argv.product}`,
     baseUrl: argv.baseUrl,
     product: argv.product,
     description: argv.description,
-    kungfuTraderUrl: `${argv.baseUrl}/${argv.product}/release-stable.html`,
-    artifactKungfuUrl: `${argv.baseUrl}/artifact-kungfu/release-stable.html`,
+    artifactKungfuUrl: `https://releases.kungfu-trader.com/artifact-kungfu/release-stable.html`,
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
   });
