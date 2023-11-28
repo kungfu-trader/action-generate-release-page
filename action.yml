@@ -4,12 +4,35 @@ description: "Generate Release Page for Kungfu Products"
 inputs:
   token:
     description: "GitHub token"
+  apiKey:
+    description: "Airtable token"
   product:
     description: "Kungfu Product"
     default: "kungfu-trader"
+  description:
+    description: "Description for Kungfu Product"
+    default: ""
   release-path:
     description: "Release Path for URL"
     default: "static"
+  lower-edge:
+    description: "Filter version >= lower-edge value"
+    required: false
+  upper-edge:
+    description: "Filter version <= upper-edge value"
+    required: false
+  release-url:
+    description: "Release page base url"
+    default: "https://releases.kungfu-trader.com"
+    required: true
+  bucket-release:
+    description: "S3 bucket for releases page"
+    default: "kungfu-releases"
+    required: true
+  exclude:
+    description: "Manually exclude the version, comma separation"
+    required: false
+
 runs:
   using: "node16"
   main: "dist/index.js"

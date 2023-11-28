@@ -2,17 +2,9 @@
 const fs = require("fs");
 const path = require("path");
 const mustache = require("mustache");
-const axios = require("axios");
 const sortBy = require("lodash.sortby");
-const { spawnSync } = require("child_process");
+const groupBy = require("lodash.groupby");
 const { getTableRecords } = require("./airtable");
-
-const spawnOpts = {
-  shell: true,
-  stdio: "pipe",
-  encoding: "utf-8",
-  windowsHide: true,
-};
 
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
@@ -20,16 +12,19 @@ exports.generate = async (argv) => {
     path.join(__dirname, "templates", "release.html"),
     "utf-8"
   );
-  const { stables, prereleases } = await getVersionList(argv);
+  const list = await getVersionList(argv);
+  if (!list) {
+    return;
+  }
   const output = mustache.render(template, {
     title: `${argv.product}`,
+    baseUrl: argv.baseUrl,
     product: argv.product,
-    description:
-      "Kungfu Trader is a trading platform for quantitative trading.",
+    description: argv.description,
     kungfuTraderUrl: `${argv.baseUrl}/${argv.product}/release-stable.html`,
     artifactKungfuUrl: `${argv.baseUrl}/artifact-kungfu/release-stable.html`,
-    stables,
-    prereleases,
+    stables: JSON.stringify(list.stables),
+    prereleases: JSON.stringify(list.prereleases),
   });
   const outputDir = path.join(
     "dist",
@@ -47,47 +42,61 @@ exports.generate = async (argv) => {
   fs.writeFileSync(fileName, output);
 };
 
-function awsCall(args, opts = spawnOpts) {
-  console.log(`$ aws ${args.join(" ")}`);
-  const result = spawnSync("aws", args, opts);
-  if (result.status !== 0) {
-    throw new Error(`Failed to call aws with status ${result.status}`);
-  }
-  return result;
-}
-
 const getVersionList = async (argv) => {
   const metadata = await getMetaData(argv);
-  const versions = getListFromS3(`s3://kungfu-releases/${argv.product}/v`)
-    .map((v) => getListFromS3(`s3://kungfu-releases/${argv.product}/${v}/`))
-    .flat();
-  const lowerEdgeWeight = argv.lowerEdge
-    ? getWeightingNumber(argv.lowerEdge, versions.length)
-    : null;
-  const upperEdgeWeight = argv.upperEdge
-    ? getWeightingNumber(argv.upperEdge, versions.length)
-    : null;
-  const { stables, prereleases } = versions.reduce(
-    (acc, version) => {
-      const meta = metadata.find((v) => v.version === version) || {};
-      const weight = getWeightingNumber(version, versions.length);
-      const isMatch = checkIsMatch(weight, lowerEdgeWeight, upperEdgeWeight);
-      isMatch &&
-        acc[version.includes("alpha") ? "prereleases" : "stables"].push({
-          ...meta,
-          version,
-          url: `${argv.baseUrl}/${argv.product}/${getCurrentVersion(
-            version
-          )}/index.html`,
-          weight: getWeightingNumber(version, versions.length),
-        });
+  if (!Array.isArray(metadata) || metadata.length === 0) {
+    return;
+  }
+  const len = metadata.length;
+  const exclude = (argv.exclude || "")
+    .split(",")
+    .map((v) => v.trim().replace("v", ""))
+    .filter((v) => !!v);
+  const lowerEdgeWeight = getWeightingNumber(argv.lowerEdge, len);
+  const upperEdgeWeight = getWeightingNumber(argv.upperEdge, len);
+  const { stables, prereleases } = metadata.reduce(
+    (acc, meta) => {
+      const version = meta.version;
+      const weight = getWeightingNumber(version, len);
+      checkIsMatch(weight, lowerEdgeWeight, upperEdgeWeight) &&
+        !exclude.includes(version.slice(1)) &&
+        acc[version.includes("alpha") ? "prereleases" : "stables"].push(
+          createVersionItem(argv, version, meta, len)
+        );
       return acc;
     },
     { stables: [], prereleases: [] }
   );
   return {
-    stables: sortBy(stables, "weight"),
-    prereleases: sortBy(prereleases, "weight"),
+    stables: transformTreeData(sortBy(stables, "weight")),
+    prereleases: transformTreeData(sortBy(prereleases, "weight")),
+  };
+};
+
+const transformTreeData = (data, parentId = "parentId") => {
+  return Object.entries(groupBy(data, parentId)).map(([_, children]) => {
+    const header = children.shift();
+    return {
+      ...header,
+      children,
+    };
+  });
+};
+
+const createVersionItem = (argv, version, meta, len) => {
+  const semverList = version.split(".");
+  const coreSemverList = meta.coreVersion ? meta.coreVersion.split(".") : null;
+  return {
+    ...meta,
+    version,
+    url: `${argv.baseUrl}/${argv.product}/${getCurrentVersion(
+      version
+    )}/index.html`,
+    weight: getWeightingNumber(version, len),
+    parentId: `${semverList[0]}.${semverList[1]}`,
+    docUrl: coreSemverList
+      ? `https://docs.kungfu-trader.com/${coreSemverList[0]}.${coreSemverList[1]}/index.html`
+      : null,
   };
 };
 
@@ -113,6 +122,9 @@ const getMetaData = async (argv) => {
       ];
       return {
         version,
+        name: argv.product,
+        repo: v.repo,
+        timestamp: v.timestamp,
         coreVersion: coreVersion ? `v${coreVersion}` : null,
         coreUrl: coreVersion
           ? `${argv.baseUrl}/artifact-kungfu/${getCurrentVersion(
@@ -124,19 +136,14 @@ const getMetaData = async (argv) => {
   }
 };
 
-const getListFromS3 = (source) => {
-  const result = awsCall(["s3", "ls", source]);
-  return result.stdout
-    .split("\n")
-    .map((v) => v.replace("PRE", "").slice(0, -1).trim())
-    .filter((v) => !!v);
-};
-
 const getCurrentVersion = (version) => {
   return `${version.split(".")[0]}/${version}`;
 };
 
 const getWeightingNumber = (name, len) => {
+  if (!name) {
+    return;
+  }
   const [v1, v2, v3, v4 = len] = name
     .replace("v", "")
     .replace("-alpha", "")

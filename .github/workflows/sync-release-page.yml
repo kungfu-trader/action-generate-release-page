@@ -7,26 +7,41 @@ on:
         required: true
         default: 'kungfu-trader'
       release-path:
-        description: 'Type product name to generate release page'
+        description: 'Release Path for URL'
         required: true
         default: 'static'
+      description:
+        description: "Description for Kungfu Product, HTML enable"
+        default: "Kungfu Trader is a trading platform for quantitative trading."
+      bucket-release:
+        description: 'S3 bucket for releases page'
+        default: 'kungfu-releases'
+        required: true
       lower-edge:
-        description: 'filter version >= lower-edge value'
+        description: 'Filter version >= lower-edge value'
         required: false
       upper-edge:
-        description: 'filter version <= upper-edge value'
+        description: 'Filter version <= upper-edge value'
+        required: false
+      exclude:
+        description: 'Manually exclude the version, comma separation'
+        default: '2.4.0, 2.2.0, 2.1.0, 2.4.0-alpha.0, 2.3.0-alpha.0, 2.2.0-alpha.0, 2.1.0-alpha.0'
         required: false
       release-url:
-          description: 'release page base url'
-          default: 'https://releases.kungfu-trader.com'
-          required: true
+        description: 'Release page base url'
+        default: 'https://releases.kungfu-trader.com'
+        required: true
 
 jobs:
   sync-release-page:
     uses: kungfu-trader/workflows/.github/workflows/.sync-release-page.yml@dev/v1/v1.2
     with:
       product: ${{ github.event.inputs.product }}
+      description: ${{ github.event.inputs.description }}
       release-path: ${{ github.event.inputs.release-path }}
       lower-edge: ${{ github.event.inputs.lower-edge }}
       upper-edge: ${{ github.event.inputs.upper-edge }}
+      exclude: ${{ github.event.inputs.exclude }}
       release-url: ${{ github.event.inputs.release-url }}
+      bucket-release: ${{ github.event.inputs.bucket-release }}
+      
