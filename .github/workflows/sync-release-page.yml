@@ -50,6 +50,5 @@ jobs:
       bucket-release: ${{ github.event.inputs.bucket-release }}
       base-id: ${{ github.event.inputs.base-id }}
     secrets:
-      GITHUB_TOKEN: ${{ secrets.KUNGFU_GITHUB_TOKEN }}
       AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
       
