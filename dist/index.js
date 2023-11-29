@@ -133,7 +133,7 @@ const { getTableRecords } = __nccwpck_require__(8277);
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
   const template = fs.readFileSync(
-    __nccwpck_require__.ab + "release.html",
+    path.join(__dirname, "../templates/release.html"),
     "utf-8"
   );
   const list = await getVersionList(argv);

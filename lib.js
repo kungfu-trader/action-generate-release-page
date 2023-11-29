@@ -9,7 +9,7 @@ const { getTableRecords } = require("./airtable");
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
   const template = fs.readFileSync(
-    path.join(__dirname, "templates", "release.html"),
+    path.join(__dirname, "../templates/release.html"),
     "utf-8"
   );
   const list = await getVersionList(argv);

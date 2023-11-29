@@ -32,6 +32,10 @@ inputs:
   exclude:
     description: "Manually exclude the version, comma separation"
     required: false
+  base-id:
+      type: string
+      required: true
+      default: "appAdi5zFFEsCzmEM"
 
 runs:
   using: "node16"
