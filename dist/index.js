@@ -17281,6 +17281,7 @@ const main = function () {
     baseId: core.getInput("base-id"),
     bucketRelease: core.getInput("bucket-release"),
     exclude: core.getInput("exclude"),
+    description: core.getInput("description"),
   };
   lib.generate(argv);
 };
