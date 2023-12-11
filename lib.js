@@ -76,24 +76,27 @@ exports.generate = async (argv) => {
 };
 
 const getDownloadList = async (latest) => {
-  return axios.get(latest.url).then((res) => {
-    const urls = [];
-    const $ = cheerio.load(res.data);
-    $("tbody td a").each((_, e) => urls.push($(e).attr("href")));
-    console.log(urls);
-    return {
-      version: latest.version,
-      win_exe: urls.find((v) => v.includes("win-") && v.endsWith(".exe")),
-      win_zip: urls.find((v) => v.includes("win-") && v.endsWith(".zip")),
-      mac_dmg: urls.find((v) => v.includes("mac-") && v.endsWith(".dmg")),
-      mac_zip: urls.find((v) => v.includes("mac-") && v.endsWith(".zip")),
-      linux_zip: urls.find((v) => v.includes("linux-") && v.endsWith(".zip")),
-      linux_appimage: urls.find(
-        (v) => v.includes("linux-") && v.endsWith(".AppImage")
-      ),
-      linux_rpm: urls.find((v) => v.includes("linux-") && v.endsWith(".rpm")),
-    };
-  });
+  return axios
+    .get(latest.url)
+    .then((res) => {
+      const urls = [];
+      const $ = cheerio.load(res.data);
+      $("tbody td a").each((_, e) => urls.push($(e).attr("href")));
+      console.log(urls);
+      return {
+        version: latest.version,
+        win_exe: urls.find((v) => v.includes("win-") && v.endsWith(".exe")),
+        win_zip: urls.find((v) => v.includes("win-") && v.endsWith(".zip")),
+        mac_dmg: urls.find((v) => v.includes("mac-") && v.endsWith(".dmg")),
+        mac_zip: urls.find((v) => v.includes("mac-") && v.endsWith(".zip")),
+        linux_zip: urls.find((v) => v.includes("linux-") && v.endsWith(".zip")),
+        linux_appimage: urls.find(
+          (v) => v.includes("linux-") && v.endsWith(".AppImage")
+        ),
+        linux_rpm: urls.find((v) => v.includes("linux-") && v.endsWith(".rpm")),
+      };
+    })
+    .catch(() => "");
 };
 
 const getVersionList = async (argv) => {
