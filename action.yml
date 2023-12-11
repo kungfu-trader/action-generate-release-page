@@ -9,9 +9,10 @@ inputs:
   product:
     description: "Kungfu Product"
     default: "kungfu-trader"
-  description:
-    description: "Description for Kungfu Product"
-    default: ""
+  product-name:
+    description: "产品中文名"
+  repo:
+    description: "repo"
   release-path:
     description: "Release Path for URL"
     default: "static"
@@ -24,18 +25,15 @@ inputs:
   release-url:
     description: "Release page base url"
     default: "https://releases.kungfu-trader.com"
-    required: true
   bucket-release:
     description: "S3 bucket for releases page"
     default: "kungfu-releases"
-    required: true
   exclude:
     description: "Manually exclude the version, comma separation"
     required: false
   base-id:
-      type: string
-      required: true
-      default: "appAdi5zFFEsCzmEM"
+    type: string
+    default: "appAdi5zFFEsCzmEM"
 
 runs:
   using: "node16"

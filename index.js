@@ -15,7 +15,8 @@ const main = function () {
     baseId: core.getInput("base-id"),
     bucketRelease: core.getInput("bucket-release"),
     exclude: core.getInput("exclude"),
-    description: core.getInput("description"),
+    productName: core.getInput("product-name"),
+    repo: core.getInput("repo"),
   };
   lib.generate(argv);
 };

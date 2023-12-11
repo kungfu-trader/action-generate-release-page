@@ -2,42 +2,98 @@
 const fs = require("fs");
 const path = require("path");
 const mustache = require("mustache");
+const axios = require("axios");
+const cheerio = require("cheerio");
+const marked = require("marked");
 const sortBy = require("lodash.sortby");
 const groupBy = require("lodash.groupby");
 const { getTableRecords } = require("./airtable");
+const { Octokit } = require("@octokit/rest");
+
+const kungfuTraderMenu = [
+  {
+    title: "首页",
+    url: "https://www.kungfu-trader.com/",
+  },
+  {
+    title: "历史版本",
+    url: "https://releases.kungfu-trader.com/",
+    class: "active",
+  },
+  {
+    title: "博客",
+    url: "https://www.kungfu-trader.com/index.php/blog/",
+  },
+  {
+    title: "功夫文档",
+    url: "https://docs.kungfu-trader.com/latest/index.html",
+    target: "_blank",
+  },
+  {
+    title: "关于我们",
+    url: "https://www.kungfu-trader.com/index.php/about-us/",
+  },
+  {
+    title: "我的账户",
+    url: "https://www.kungfu-trader.com/index.php/my-account-2/",
+  },
+];
 
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
   const template = fs.readFileSync(
-    path.join(__dirname, "../templates/release.html"),
+    path.join(__dirname, "./templates/release.html"),
     "utf-8"
   );
   const list = await getVersionList(argv);
+  const { readme } = await getRepoInfo(argv);
   if (!list) {
     return;
   }
   const output = mustache.render(template, {
     baseUrl: argv.baseUrl,
     product: argv.product,
-    description: argv.description,
-    artifactKungfuUrl: `https://releases.kungfu-trader.com/artifact-kungfu/release-stable.html`,
+    productName: argv.productName,
+    menu: kungfuTraderMenu,
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
+    readme,
   });
-  const outputDir = path.join(
-    "dist",
-    argv.product,
-    "build",
-    "stage",
-    argv.releasePath
-  );
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-  }
+  const outputDir = getOutputDir(argv);
   console.log(`Writing release page to ${outputDir}`);
   const fileName = path.join(outputDir, "index.html");
   console.log(`Writing release page to ${fileName}`);
   fs.writeFileSync(fileName, output);
+  const latest = sortBy(list.stables, "weight")[1];
+  if (latest) {
+    fs.writeFileSync(
+      path.join(outputDir, "meta.json"),
+      JSON.stringify({
+        latest: await getDownloadList(latest),
+      })
+    );
+  }
+};
+
+const getDownloadList = async (latest) => {
+  return axios.get(latest.url).then((res) => {
+    const urls = [];
+    const $ = cheerio.load(res.data);
+    $("tbody td a").each((_, e) => urls.push($(e).attr("href")));
+    console.log(urls);
+    return {
+      version: latest.version,
+      win_exe: urls.find((v) => v.includes("win-") && v.endsWith(".exe")),
+      win_zip: urls.find((v) => v.includes("win-") && v.endsWith(".zip")),
+      mac_dmg: urls.find((v) => v.includes("mac-") && v.endsWith(".dmg")),
+      mac_zip: urls.find((v) => v.includes("mac-") && v.endsWith(".zip")),
+      linux_zip: urls.find((v) => v.includes("linux-") && v.endsWith(".zip")),
+      linux_appimage: urls.find(
+        (v) => v.includes("linux-") && v.endsWith(".AppImage")
+      ),
+      linux_rpm: urls.find((v) => v.includes("linux-") && v.endsWith(".rpm")),
+    };
+  });
 };
 
 const getVersionList = async (argv) => {
@@ -66,19 +122,9 @@ const getVersionList = async (argv) => {
     { stables: [], prereleases: [] }
   );
   return {
-    stables: transformTreeData(sortBy(stables, "weight")),
-    prereleases: transformTreeData(sortBy(prereleases, "weight")),
+    stables: sortBy(stables, (v) => -v.timestamp),
+    prereleases: sortBy(prereleases, (v) => -v.timestamp),
   };
-};
-
-const transformTreeData = (data, parentId = "parentId") => {
-  return Object.entries(groupBy(data, parentId)).map(([_, children]) => {
-    const header = children.shift();
-    return {
-      ...header,
-      children,
-    };
-  });
 };
 
 const createVersionItem = (argv, version, meta, len) => {
@@ -134,6 +180,29 @@ const getMetaData = async (argv) => {
   }
 };
 
+const getRepoInfo = async (argv) => {
+  const octokit = new Octokit({
+    auth: argv.token,
+  });
+
+  const readme = await octokit
+    .request("GET /repos/{owner}/{repo}/contents/{path}", {
+      owner: "kungfu-trader",
+      repo: argv.repo,
+      path: "README.md",
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    })
+    .then((res) => {
+      return marked.parse(
+        Buffer.from(res?.data?.content, "base64").toString("utf-8")
+      );
+    })
+    .catch(() => "");
+  return { readme };
+};
+
 const getCurrentVersion = (version) => {
   return `${version.split(".")[0]}/${version}`;
 };
@@ -162,4 +231,18 @@ const checkIsMatch = (weight, lowerEdgeWeight, upperEdgeWeight) => {
     return weight >= upperEdgeWeight;
   }
   return true;
+};
+
+const getOutputDir = (argv) => {
+  const outputDir = path.join(
+    "dist",
+    argv.product,
+    "build",
+    "stage",
+    argv.releasePath
+  );
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+  return outputDir;
 };

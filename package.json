@@ -18,10 +18,12 @@
     "@octokit/rest": "^20.0.2",
     "@yarnpkg/lockfile": "^1.1.0",
     "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
     "glob": "^10.3.0",
     "lodash.chunk": "^4.2.0",
     "lodash.groupby": "^4.6.0",
     "lodash.sortby": "^4.7.0",
+    "marked": "^11.0.1",
     "mustache": "^4.2.0",
     "semver": "^7.5.4",
     "yargs": "^17.7.2"
