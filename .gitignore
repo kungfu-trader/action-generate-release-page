@@ -7,7 +7,7 @@ node_modules/
 
 # build related
 build/
-dist/
+dist/*/
 
 test.js
 scan.js
