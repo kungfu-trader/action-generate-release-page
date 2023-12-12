@@ -6,43 +6,14 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const marked = require("marked");
 const sortBy = require("lodash.sortby");
-const groupBy = require("lodash.groupby");
 const { getTableRecords } = require("./airtable");
 const { Octokit } = require("@octokit/rest");
-
-const kungfuTraderMenu = [
-  {
-    title: "首页",
-    url: "https://www.kungfu-trader.com/",
-  },
-  {
-    title: "历史版本",
-    url: "https://releases.kungfu-trader.com/",
-    class: "active",
-  },
-  {
-    title: "博客",
-    url: "https://www.kungfu-trader.com/index.php/blog/",
-  },
-  {
-    title: "功夫文档",
-    url: "https://docs.kungfu-trader.com/latest/index.html",
-    target: "_blank",
-  },
-  {
-    title: "关于我们",
-    url: "https://www.kungfu-trader.com/index.php/about-us/",
-  },
-  {
-    title: "我的账户",
-    url: "https://www.kungfu-trader.com/index.php/my-account-2/",
-  },
-];
+const getMenu = require("./templates/menu");
 
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
   const template = fs.readFileSync(
-    path.join(__dirname, "./templates/release.html"),
+    path.join(__dirname, "../templates/release.html"),
     "utf-8"
   );
   const list = await getVersionList(argv);
@@ -54,7 +25,7 @@ exports.generate = async (argv) => {
     baseUrl: argv.baseUrl,
     product: argv.product,
     productName: argv.productName,
-    menu: kungfuTraderMenu,
+    menu: getMenu(argv.product),
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
     readme,
@@ -82,7 +53,6 @@ const getDownloadList = async (latest) => {
       const urls = [];
       const $ = cheerio.load(res.data);
       $("tbody td a").each((_, e) => urls.push($(e).attr("href")));
-      console.log(urls);
       return {
         version: latest.version,
         win_exe: urls.find((v) => v.includes("win-") && v.endsWith(".exe")),
