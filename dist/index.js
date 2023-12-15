@@ -141,7 +141,7 @@ exports.generate = async (argv) => {
     "utf-8"
   );
   const list = await getVersionList(argv);
-  const { readme } = await getRepoInfo(argv);
+  const { readme = "" } = await getRepoInfo(argv);
   if (!list) {
     return;
   }
@@ -289,7 +289,6 @@ const getRepoInfo = async (argv) => {
   const octokit = new Octokit({
     auth: argv.token,
   });
-
   const readme = await octokit
     .request("GET /repos/{owner}/{repo}/contents/{path}", {
       owner: "kungfu-trader",
@@ -304,7 +303,7 @@ const getRepoInfo = async (argv) => {
         Buffer.from(res?.data?.content, "base64").toString("utf-8")
       );
     })
-    .catch(() => "");
+    .catch((e) => console.log(e));
   return { readme };
 };
 

@@ -22,13 +22,14 @@ on:
         required: true
       lower-edge:
         description: 'Filter version >= lower-edge value'
+        default: 1.1.1
         required: false
       upper-edge:
         description: 'Filter version <= upper-edge value'
         required: false
       exclude:
         description: 'Manually exclude the version, comma separation'
-        default: '2.4.0, 2.2.0, 2.1.0, 2.4.0-alpha.0, 2.3.0-alpha.0, 2.2.0-alpha.0, 2.1.0-alpha.0'
+        default: 2.4.0, 2.2.0, 2.1.0, 2.4.0-alpha.0, 2.3.0-alpha.0, 2.2.0-alpha.0, 2.1.0-alpha.0, 2.6.6, 2.6.6-alpha.0
         required: false
       base-id:
         type: string
