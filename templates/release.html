@@ -206,16 +206,24 @@
             margin: 36px 0;
             line-height: 1.5;
         }
-        .description p {
+        #readme p {
             margin: 8px 0;
         }
 
-        .description li {
+        #readme li {
             margin-left: 1.5em;
             list-style: disc;
         }
-        .description code {
+        #readme code {
             background-color: #eee;
+        }
+
+        #readme h1, #readme h2 {
+            font-size: 18px;
+        }
+
+        #readme {
+            margin-top: 1em;
         }
         
     </style>
@@ -256,7 +264,7 @@
     </header>
     <section class="container panel">
         <div class="description">
-            <h2>{{productName}}</h2>
+            <h1>{{productName}}</h1>
             <div id="readme">{{{readme}}}</div>
         </div>
         <div id="table-container" style="opacity: 0;">
@@ -317,7 +325,7 @@
                             showIcon: false
                         }
                     },
-                    cols: cols.filter(v => !v.rules || v.rules(data)),
+                    cols: cols.map(a => a.filter(v => !v.rules || v.rules(data))),
                     data,
                     page: false
                 });

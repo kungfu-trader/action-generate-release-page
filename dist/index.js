@@ -137,7 +137,7 @@ const getMenu = __nccwpck_require__(8818);
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
   const template = fs.readFileSync(
-    path.join(__dirname, "../templates/release.html"),
+    __nccwpck_require__.ab + "release.html",
     "utf-8"
   );
   const list = await getVersionList(argv);
@@ -159,15 +159,15 @@ exports.generate = async (argv) => {
   const fileName = path.join(outputDir, "index.html");
   console.log(`Writing release page to ${fileName}`);
   fs.writeFileSync(fileName, output);
-  const latest = sortBy(list.stables, "weight")[1];
-  if (latest) {
-    fs.writeFileSync(
-      path.join(outputDir, "meta.json"),
-      JSON.stringify({
-        latest: await getDownloadList(latest),
-      })
-    );
-  }
+  // const latest = sortBy(list.stables, "weight")[1];
+  // if (latest) {
+  //   fs.writeFileSync(
+  //     path.join(outputDir, "meta.json"),
+  //     JSON.stringify({
+  //       latest: await getDownloadList(latest),
+  //     })
+  //   );
+  // }
 };
 
 const getDownloadList = async (latest) => {
@@ -256,24 +256,32 @@ const getMetaData = async (argv) => {
     },
   });
   if (Array.isArray(res)) {
-    return res.map((v) => {
-      const version = `v${v.version}`;
-      const coreVersion = JSON.parse(v.dependencies)[
-        "@kungfu-trader/kungfu-core"
-      ];
-      return {
-        version,
-        name: argv.product,
-        repo: v.repo,
-        timestamp: v.timestamp,
-        coreVersion: coreVersion ? `v${coreVersion}` : null,
-        coreUrl: coreVersion
-          ? `${argv.baseUrl}/artifact-kungfu/${getCurrentVersion(
-              `v${coreVersion}`
-            )}/index.html`
-          : null,
-      };
-    });
+    return res.reduce(
+      (acc, v) => {
+        const version = `v${v.version}`;
+        const coreVersion = JSON.parse(v.dependencies)[
+          "@kungfu-trader/kungfu-core"
+        ];
+
+        if (!acc.versions.has(version)) {
+          acc.result.push({
+            version,
+            name: argv.product,
+            repo: v.repo,
+            timestamp: v.timestamp,
+            coreVersion: coreVersion ? `v${coreVersion}` : null,
+            coreUrl: coreVersion
+              ? `${argv.baseUrl}/artifact-kungfu/${getCurrentVersion(
+                  `v${coreVersion}`
+                )}/index.html`
+              : null,
+          });
+          acc.versions.add(version);
+        }
+        return acc;
+      },
+      { result: [], versions: new Set() }
+    ).result;
   }
 };
 
