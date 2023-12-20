@@ -17,6 +17,7 @@ const main = function () {
     exclude: core.getInput("exclude"),
     productName: core.getInput("product-name"),
     repo: core.getInput("repo"),
+    title: core.getInput("title"),
   };
   lib.generate(argv);
 };

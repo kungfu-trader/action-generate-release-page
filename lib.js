@@ -29,6 +29,7 @@ exports.generate = async (argv) => {
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
     readme,
+    title: argv.title || argv.product,
   });
   const outputDir = getOutputDir(argv);
   console.log(`Writing release page to ${outputDir}`);

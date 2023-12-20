@@ -153,6 +153,7 @@ exports.generate = async (argv) => {
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
     readme,
+    title: argv.title || argv.product,
   });
   const outputDir = getOutputDir(argv);
   console.log(`Writing release page to ${outputDir}`);
@@ -41728,6 +41729,7 @@ const main = function () {
     exclude: core.getInput("exclude"),
     productName: core.getInput("product-name"),
     repo: core.getInput("repo"),
+    title: core.getInput("title"),
   };
   lib.generate(argv);
 };

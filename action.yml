@@ -34,6 +34,9 @@ inputs:
   base-id:
     type: string
     default: "appAdi5zFFEsCzmEM"
+  title:
+    type: string
+    default: "历史版本 - 功夫量化"
 
 runs:
   using: "node20"
