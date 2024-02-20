@@ -16,7 +16,7 @@ const menus = [
         url: "https://www.kungfu-trader.com/index.php/blog/",
       },
       {
-        title: "功夫文档",
+        title: "文档",
         url: "https://docs.kungfu-trader.com/latest/index.html",
         target: "_blank",
       },
