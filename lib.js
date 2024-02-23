@@ -21,11 +21,13 @@ exports.generate = async (argv) => {
   if (!list) {
     return;
   }
+  const { menu, copyright } = getMenu(argv.product);
   const output = mustache.render(template, {
     baseUrl: argv.baseUrl,
     product: argv.product,
     productName: argv.productName,
-    menu: getMenu(argv.product),
+    menu,
+    copyright,
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
     readme,

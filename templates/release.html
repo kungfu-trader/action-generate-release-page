@@ -257,8 +257,7 @@
                 <a class="custom-logo-wrap" href="https://www.kungfu-trader.com/">
                     <img width="300" height="82"
                         src="https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2024/01/cropped-cropped-log-18-300x82_副本.png"
-                        class="custom-logo" alt="" decoding="async"
-                    >
+                        class="custom-logo" alt="" decoding="async">
                 </a>
                 <div class="nav-icon-wrap" id="toggle-nav">
                     <svg id="icon-open" style="display: block;" class="nav-icon" version="1.1"
@@ -299,24 +298,34 @@
     <footer class="footer">
         <div style="max-width: 1200px; margin: 0 auto;">
             <div class="ast-footer-copyright">
-                <div style="display: inline-block; text-align: justify;"><span style="color: #ffffff;">Copyright © 2017
-                        - 2024&nbsp; &nbsp;北京功夫源科技发展有限责任公司 &nbsp; <a style="color: #ffffff;"
-                            href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank"
-                            rel="noopener">京ICP备19056728号-1</a>&nbsp; &nbsp; <img loading="lazy" class="wp-image-5874"
-                            src="https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2023/12/logo01.6189a29f1.png"
-                            alt="" width="15" height="16"><a style="color: #ffffff;"
-                            href="https://beian.mps.gov.cn/#/query/webSearch?code=11010202010762" target="_blank"
-                            rel="noopener noreferrer">京公网安备11010202010762</a></span></div>
-                <div style="display: inline-block; float: right;"><span style="color: #ffffff;"><a
-                            style="color: #ffffff;" href="https://www.kungfu-trader.com/index.php/user_agreement/"
-                            target="_blank" rel="noopener">[用户协议]</a> &nbsp;&nbsp;<a style="color: #ffffff;"
-                            href="https://www.kungfu-trader.com/index.php/privacy_policy/" target="_blank"
-                            rel="noopener">[隐私政策] </a>&nbsp; &nbsp;<a style="color: #ffffff;"
-                            href="https://www.kungfu-trader.com/index.php/disclaimer/" target="_blank"
-                            rel="noopener">[法律声明]</a></span></div>
+                <div style="display: inline-block; text-align: justify;">
+                    <span>
+                        Copyright © {{copyright.year}}&nbsp; &nbsp;{{copyright.company}} &nbsp;
+                        <a style="color: hwb(0 100% 0%);" href="{{{copyright.miitUrl}}}" target="_blank"
+                            rel="noopener">{{copyright.miitCode}}</a>&nbsp; &nbsp;
+                        <img loading="lazy" src="{{{copyright.icpIcon}}}" alt="" width="15" height="16">
+                        <a href="{{{copyright.mpsUrl}}}" target="_blank"
+                            rel="noopener noreferrer">{{copyright.mpsCode}}</a>
+                    </span>
+                </div>
+                <div style="float: right;">
+                    <span>
+                        {{#copyright.agreementUrl}}
+                        <a href="{{{copyright.agreementUrl}}}" target="_blank" rel="noopener">[用户协议]</a> &nbsp;&nbsp;
+                        {{/copyright.agreementUrl}}
+                        {{#copyright.privacyPolicyUrl}}
+                        <a href="{{{copyright.privacyPolicyUrl}}}" target="_blank" rel="noopener">[隐私政策] </a>&nbsp;
+                        &nbsp;
+                        {{/copyright.privacyPolicyUrl}}
+                        {{#copyright.disclaimerUrl}}
+                        <a href="{{{copyright.disclaimerUrl}}}" target="_blank" rel="noopener">[法律声明]</a>
+                        {{/copyright.disclaimerUrl}}
+                    </span>
+                </div>
             </div>
         </div>
     </footer>
+
     <script>
         const cols = [[
             {
