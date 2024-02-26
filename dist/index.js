@@ -140,22 +140,21 @@ exports.generate = async (argv) => {
     __nccwpck_require__.ab + "release.html",
     "utf-8"
   );
-  const list = await getVersionList(argv);
+  const meta = getMenu(argv.product);
+  const list = await getVersionList({ ...argv, ...meta });
   const { readme = "" } = await getRepoInfo(argv);
   if (!list) {
     return;
   }
-  const { menu, copyright } = getMenu(argv.product);
   const output = mustache.render(template, {
     baseUrl: argv.baseUrl,
     product: argv.product,
     productName: argv.productName,
-    menu,
-    copyright,
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
     readme,
     title: argv.title || argv.product,
+    ...meta,
   });
   const outputDir = getOutputDir(argv);
   console.log(`Writing release page to ${outputDir}`);
@@ -233,9 +232,9 @@ const createVersionItem = (argv, version, meta, len) => {
   return {
     ...meta,
     version,
-    url: `${argv.baseUrl}/${argv.product}/${getCurrentVersion(
-      version
-    )}/index.html`,
+    url: `${argv.baseUrl}/${
+      argv.useArtifactName ? argv.product + "/" : ""
+    }${getCurrentVersion(version)}/index.html`,
     weight: getWeightingNumber(version, len),
     parentId: `${semverList[0]}.${semverList[1]}`,
     docUrl: coreSemverList
@@ -274,7 +273,7 @@ const getMetaData = async (argv) => {
             timestamp: v.timestamp,
             coreVersion: coreVersion ? `v${coreVersion}` : null,
             coreUrl: coreVersion
-              ? `${argv.baseUrl}/artifact-kungfu/${getCurrentVersion(
+              ? `https://releases.libkungfu.cc/${getCurrentVersion(
                   `v${coreVersion}`
                 )}/index.html`
               : null,
@@ -26234,6 +26233,9 @@ function wrappy (fn, cb) {
 const items = [
   {
     products: ["kungfu-trader"],
+    homePage: "https://www.kungfu-trader.com",
+    logo: "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2024/01/cropped-cropped-log-18-300x82_副本.png",
+    useArtifactName: true,
     menu: [
       {
         title: "首页",
@@ -26277,6 +26279,46 @@ const items = [
       disclaimerUrl: "https://www.kungfu-trader.com/index.php/disclaimer/",
     },
   },
+  {
+    products: ["artifact-kungfu"],
+    homePage: "https://www.libkungfu.cc",
+    logo: "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2024/01/cropped-cropped-log-18-300x82_副本.png",
+    menu: [
+      {
+        title: "首页",
+        url: "https://www.libkungfu.cc/",
+      },
+      {
+        title: "文档",
+        url: "https://docs.kungfu-trader.com/latest/index.html",
+        target: "_blank",
+      },
+      {
+        title: "github",
+        url: "https://github.com/kungfu-trader",
+        target: "_blank",
+      },
+      {
+        title: "功夫交易",
+        url: "https://www.kungfu-trader.com/",
+        target: "_blank",
+      },
+    ],
+    copyright: {
+      year: "2023 - 2024",
+      company: "北京功夫源科技发展有限责任公司",
+      miitCode: "京ICP备19056728号-2",
+      miitUrl: "https://beian.miit.gov.cn/#/Integrated/index",
+      mpsCode: "京公网安备11010202010763",
+      mpsUrl: "https://beian.mps.gov.cn/#/query/webSearch?code=11010202010763",
+      icpIcon:
+        "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2023/12/logo01.6189a29f1.png",
+      agreementUrl: "https://www.kungfu-trader.com/index.php/user_agreement/",
+      privacyPolicyUrl:
+        "https://www.kungfu-trader.com/index.php/privacy_policy/",
+      disclaimerUrl: "https://www.kungfu-trader.com/index.php/disclaimer/",
+    },
+  }
 ];
 
 const getMenu = (product) => {

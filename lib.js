@@ -16,22 +16,21 @@ exports.generate = async (argv) => {
     path.join(__dirname, "./templates/release.html"),
     "utf-8"
   );
-  const list = await getVersionList(argv);
+  const meta = getMenu(argv.product);
+  const list = await getVersionList({ ...argv, ...meta });
   const { readme = "" } = await getRepoInfo(argv);
   if (!list) {
     return;
   }
-  const { menu, copyright } = getMenu(argv.product);
   const output = mustache.render(template, {
     baseUrl: argv.baseUrl,
     product: argv.product,
     productName: argv.productName,
-    menu,
-    copyright,
     stables: JSON.stringify(list.stables),
     prereleases: JSON.stringify(list.prereleases),
     readme,
     title: argv.title || argv.product,
+    ...meta,
   });
   const outputDir = getOutputDir(argv);
   console.log(`Writing release page to ${outputDir}`);
@@ -109,9 +108,9 @@ const createVersionItem = (argv, version, meta, len) => {
   return {
     ...meta,
     version,
-    url: `${argv.baseUrl}/${argv.product}/${getCurrentVersion(
-      version
-    )}/index.html`,
+    url: `${argv.baseUrl}/${
+      argv.useArtifactName ? argv.product + "/" : ""
+    }${getCurrentVersion(version)}/index.html`,
     weight: getWeightingNumber(version, len),
     parentId: `${semverList[0]}.${semverList[1]}`,
     docUrl: coreSemverList
@@ -150,7 +149,7 @@ const getMetaData = async (argv) => {
             timestamp: v.timestamp,
             coreVersion: coreVersion ? `v${coreVersion}` : null,
             coreUrl: coreVersion
-              ? `${argv.baseUrl}/artifact-kungfu/${getCurrentVersion(
+              ? `https://releases.libkungfu.cc/${getCurrentVersion(
                   `v${coreVersion}`
                 )}/index.html`
               : null,
