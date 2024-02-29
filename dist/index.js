@@ -26338,6 +26338,12 @@ const items = [
         target: "_blank",
       },
     ],
+    extraHTML: `
+      <img
+        src="https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png"
+        style="display: block; width: 80%;margin: 0 auto;"
+      />
+    `,
     copyright: {
       year: "2023 - 2024",
       company: "北京功夫源科技发展有限责任公司",
