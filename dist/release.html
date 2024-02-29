@@ -372,11 +372,38 @@
         </div>
     </header>
     <section class="container panel">
-        <div>
-            {{{extraHTML}}}
-        </div>
         <div class="description">
             <h1>{{productName}}</h1>
+            {{#workingScheule}}
+            <div class="release-schedule" style="padding-top: 1em;">
+                <h3>Release schedule</h3>
+                <table class="layui-table" style="margin: 1em 0;">
+                    <thead>
+                        <tr>
+                            <th>Release</th>
+                            <th>Codename</th>
+                            <th>Initial Release</th>
+                            <th>End-of-life</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#workingScheule.data}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{Codename}}</td>
+                            <td>{{start}}</td>
+                            <td>{{end}}</td>
+                        </tr>
+                        {{/workingScheule.data}}
+                    </tbody>
+                </table>
+                <h3>Dates are subject to change.</h3>
+                <img
+                    src="https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png"
+                    style="display: block; width: 80%;margin: 10px auto 0;"
+                />
+            </div>
+            {{/workingScheule}}
             <div id="readme">{{{readme}}}</div>
         </div>
         <div id="table-container" style="opacity: 0;">

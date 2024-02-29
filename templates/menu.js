@@ -106,14 +106,42 @@ const items = [
         target: "_blank",
       },
     ],
-    extraHTML: `
-      <img
-        src="https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png"
-        style="display: block; width: 80%;margin: 0 auto;"
-      />
-    `,
+    workingScheule: {
+      imageUrl: 'https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png',
+      data: Object.entries({
+        "v2.4": {
+          "start": "2022-02-07",
+          "end": "2023-11-03",
+          "codename": ""
+        },
+        "v2.5": {
+          "start": "2023-02-28",
+          "end": "2024-02-01",
+          "codename": ""
+        },
+        "v2.6": {
+          "start": "2023-03-01",
+          "lts": "2023-05-22",
+          "maintenance": "2024-01-23",
+          "end": "2024-05-30",
+          "codename": ""
+        },
+        "v2.7": {
+          "start": "2023-05-29",
+          "lts": "2023-12-09",
+          "end": "2024-12-01"
+        },
+        "v3.0": {
+          "start": "2024-02-23",
+          "end": "2025-12-30"
+        }
+      }).map(v => ({
+        name: v[0],
+        ...v[1]
+      }))
+    },
     copyright: {
-      year: "2023 - 2024",
+      year: "2017 - 2024",
       company: "北京功夫源科技发展有限责任公司",
       miitCode: "京ICP备19056728号-2",
       miitUrl: "https://beian.miit.gov.cn/#/Integrated/index",
