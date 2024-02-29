@@ -61,7 +61,6 @@
 
         .header {
             background-color: #fff;
-            min-height: 79px;
             user-select: none;
             position: fixed;
             top: 0;
@@ -76,7 +75,6 @@
 
         .custom-logo-wrap {
             display: block;
-            height: 79px;
             margin-left: 28px;
         }
 
@@ -105,27 +103,58 @@
             line-height: 30px;
             overflow: visible;
             margin: 0;
+            position: relative;
         }
 
-        .nav-menu-item a {
+        .nav-menu-item .nav-menu-link {
             display: block;
             color: #ffffff;
             transition: all .3s ease;
             padding: 0 18px;
-            font-weight: 400;
+            white-space: nowrap;
         }
 
-        .nav-menu-item:last-child a {
+        .nav-menu-item:last-child .nav-menu-link {
             padding: 0 0 0 20px;
         }
 
-        .nav-menu-item a.active {
+        .nav-menu-item .nav-menu-link.active {
             color: #F2BA02;
         }
 
-        .nav-menu-item a:hover {
+        .nav-menu-item .nav-menu-link:hover {
             transform: scale(1.2);
             color: #F2BA02;
+        }
+
+        .nav-menu-item .icon-arrow svg {
+            fill: currentColor;
+            margin-left: 4px;
+        }
+
+        .nav-menu-item .nav-menu-link-icon {
+            height: 30px;
+        }
+
+        .nav-menu-item .drop-down-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: rgba(0, 0, 0, .8);
+            display: none;
+            transition: display 2s;
+        }
+
+        .nav-menu-item:hover .drop-down-list {
+            display: block;
+        }
+
+        .drop-down-list .nav-menu-link {
+            line-height: 58.47px;
+        }
+
+        .nav-menu-item .drop-down-list .nav-menu-link:hover {
+            transform: scale(1);
         }
 
         .nav-icon-wrap {
@@ -162,14 +191,14 @@
                 background-color: #fff;
             }
 
-            .nav-menu-item a {
+            .nav-menu-item .nav-menu-link {
                 color: #424242;
                 padding: 0;
                 line-height: 41.06px;
                 padding-left: 20px;
             }
 
-            .nav-menu-item a:hover {
+            .nav-menu-item .nav-menu-link:hover {
                 transform: none;
             }
 
@@ -179,6 +208,21 @@
 
             .layui-panel {
                 margin-top: 24px !important;
+            }
+
+            .nav-menu-item .drop-down-list {
+                position: static;
+                display: block;
+                background-color: transparent;
+            }
+
+            .drop-down-list .nav-menu-link {
+                line-height: 41.06px;
+                padding-left: 2em;
+            }
+
+            .nav-menu-link-icon {
+                filter: invert(100%);
             }
         }
 
@@ -202,7 +246,7 @@
         }
 
         .footer a {
-            color: #fff;
+            color: inherit;
         }
 
         .link-wrap {
@@ -251,13 +295,17 @@
 </head>
 
 <body>
-    <header class="header">
+    <header class="header" style="position: {{logo.position}}">
         <div class="header-content">
             <div class="container">
-                <a class="custom-logo-wrap" href="{{{homePage}}}">
-                    <img width="300" height="82"
-                        src="{{{logo}}}"
-                        class="custom-logo" alt="" decoding="async">
+                <a class="custom-logo-wrap" href="{{{homePage}}}" style="height: {{logo.wrap}}px">
+                    <img
+                        width="300"
+                        src="{{{logo.url}}}"
+                        height="{{logo.height}}"
+                        style="margin-top: {{logo.offset}}px"
+                        class="custom-logo" alt=""
+                    >
                 </a>
                 <div class="nav-icon-wrap" id="toggle-nav">
                     <svg id="icon-open" style="display: block;" class="nav-icon" version="1.1"
@@ -275,9 +323,49 @@
                 </div>
                 <nav class="nav-menu" id="nav-menu">
                     {{#menu}}
-                    <span class="nav-menu-item">
-                        <a class="{{class}}" href="{{{url}}}" aria-current="page" target="{{blank}}">{{title}}</a>
-                    </span>
+                    <div class="nav-menu-item">
+                        {{#url}}
+                        <a class="nav-menu-link {{class}}" href="{{{url}}}" aria-current="page" target="{{target}}">
+                            {{#icon}}
+                            <img src="{{{icon}}}" alt="" class="nav-menu-link-icon">
+                            {{/icon}}
+                            {{^icon}}
+                            {{title}}
+                            {{/icon}}
+                        </a>
+                        {{/url}}
+                        {{^url}}
+                        <span class="nav-menu-link {{class}}">
+                            <span>{{title}}</span>
+                            <span class="icon-arrow">
+                                <svg class="ast-arrow-svg" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px"
+                                    width="11px" height="11px" viewBox="57 35.171 26 16.043"
+                                    enable-background="new 57 35.171 26 16.043" xml:space="preserve">
+                                    <path d="M57.5,38.193l12.5,12.5l12.5-12.5l-2.5-2.5l-10,10l-10-10L57.5,38.193z">
+                                    </path>
+                                </svg>
+                            </span>
+                        </span>
+                        <div class="drop-down-list">
+                            <ul>
+                                {{#children}}
+                                <li>
+                                    <a class="{{class}} nav-menu-link" href="{{{url}}}" aria-current="page"
+                                        target="{{target}}">
+                                        {{#icon}}
+                                        <img src="{{{icon}}}" alt="" class="nav-menu-link-icon">
+                                        {{/icon}}
+                                        {{^icon}}
+                                        {{title}}
+                                        {{/icon}}
+                                    </a>
+                                </li>
+                                {{/children}}
+                            </ul>
+                        </div>
+                        {{/url}}
+                    </div>
                     {{/menu}}
                 </nav>
             </div>
@@ -295,13 +383,13 @@
             <div id="prereleases-table"></div>
         </div>
     </section>
-    <footer class="footer">
+    <footer class="footer" style="background-color: {{copyright.bgcolor}}; color: {{copyright.color}}">
         <div style="max-width: 1200px; margin: 0 auto;">
             <div class="ast-footer-copyright">
                 <div style="display: inline-block; text-align: justify;">
                     <span>
                         Copyright © {{copyright.year}}&nbsp; &nbsp;{{copyright.company}} &nbsp;
-                        <a style="color: hwb(0 100% 0%);" href="{{{copyright.miitUrl}}}" target="_blank"
+                        <a href="{{{copyright.miitUrl}}}" target="_blank"
                             rel="noopener">{{copyright.miitCode}}</a>&nbsp; &nbsp;
                         <img loading="lazy" src="{{{copyright.icpIcon}}}" alt="" width="15" height="16">
                         <a href="{{{copyright.mpsUrl}}}" target="_blank"

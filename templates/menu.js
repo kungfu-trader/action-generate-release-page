@@ -2,7 +2,13 @@ const items = [
   {
     products: ["kungfu-trader"],
     homePage: "https://www.kungfu-trader.com",
-    logo: "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2024/01/cropped-cropped-log-18-300x82_副本.png",
+    logo: {
+      url: "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2024/01/cropped-cropped-log-18-300x82_副本.png",
+      height: 82,
+      offset: -2,
+      wrap: 79,
+      position: 'fixed'
+    },
     useArtifactName: true,
     menu: [
       {
@@ -10,18 +16,37 @@ const items = [
         url: "https://www.kungfu-trader.com/",
       },
       {
-        title: "历史版本",
-        url: "https://releases.kungfu-trader.com/",
+        title: "产品",
         class: "active",
-      },
-      {
-        title: "博客",
-        url: "https://www.kungfu-trader.com/index.php/blog/",
+        children: [
+          {
+            title: "解决方案",
+            url: "https://www.kungfu-trader.com/index.php/solution/",
+            target: "_blank",
+            class: "",
+          },
+          {
+            title: "功夫核心库",
+            url: "https://www.libkungfu.cc/",
+            target: "_blank",
+            class: "",
+          },
+          {
+            title: "历史版本",
+            url: "https://releases.kungfu-trader.com/",
+            target: "_blank",
+            class: "active",
+          },
+        ],
       },
       {
         title: "文档",
         url: "https://docs.kungfu-trader.com/latest/index.html",
         target: "_blank",
+      },
+      {
+        title: "博客",
+        url: "https://www.kungfu-trader.com/index.php/blog/",
       },
       {
         title: "关于我们",
@@ -50,25 +75,34 @@ const items = [
   {
     products: ["artifact-kungfu"],
     homePage: "https://www.libkungfu.cc",
-    logo: "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2024/01/cropped-cropped-log-18-300x82_副本.png",
+    logo: {
+      url: "https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/cropped-核心库3.png",
+      height: 85,
+      offset: -8,
+      wrap: 72,
+      position: 'absolute'
+    },
     menu: [
-      {
-        title: "首页",
-        url: "https://www.libkungfu.cc/",
-      },
       {
         title: "文档",
         url: "https://docs.kungfu-trader.com/latest/index.html",
         target: "_blank",
       },
       {
-        title: "github",
-        url: "https://github.com/kungfu-trader",
+        title: "版本",
+        url: "https://releases.libkungfu.cc/",
+        target: "_blank",
+        class: "active",
+      },
+      {
+        title: "功夫量化",
+        url: "https://www.kungfu-trader.com/",
         target: "_blank",
       },
       {
-        title: "功夫交易",
-        url: "https://www.kungfu-trader.com/",
+        title: "github",
+        icon: "https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/github-mark-white.png",
+        url: "https://github.com/kungfu-trader",
         target: "_blank",
       },
     ],
@@ -85,8 +119,10 @@ const items = [
       privacyPolicyUrl:
         "https://www.kungfu-trader.com/index.php/privacy_policy/",
       disclaimerUrl: "https://www.kungfu-trader.com/index.php/disclaimer/",
+      bgcolor: "transparent",
+      color: "#343434",
     },
-  }
+  },
 ];
 
 const getMenu = (product) => {

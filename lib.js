@@ -144,7 +144,7 @@ const getMetaData = async (argv) => {
         if (!acc.versions.has(version)) {
           acc.result.push({
             version,
-            name: argv.product,
+            name: argv.product.replace("artifact-", ""),
             repo: v.repo,
             timestamp: v.timestamp,
             coreVersion: coreVersion ? `v${coreVersion}` : null,
