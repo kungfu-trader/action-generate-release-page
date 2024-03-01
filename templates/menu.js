@@ -7,7 +7,7 @@ const items = [
       height: 82,
       offset: -2,
       wrap: 79,
-      position: 'fixed'
+      position: "fixed",
     },
     useArtifactName: true,
     menu: [
@@ -71,6 +71,7 @@ const items = [
         "https://www.kungfu-trader.com/index.php/privacy_policy/",
       disclaimerUrl: "https://www.kungfu-trader.com/index.php/disclaimer/",
     },
+    docUrl: "https://docs.kungfu-trader.com",
   },
   {
     products: ["artifact-kungfu"],
@@ -80,7 +81,7 @@ const items = [
       height: 85,
       offset: -8,
       wrap: 72,
-      position: 'absolute'
+      position: "absolute",
     },
     menu: [
       {
@@ -107,39 +108,41 @@ const items = [
       },
     ],
     workingScheule: {
-      imageUrl: 'https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png',
+      imageUrl:
+        "https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png",
       data: Object.entries({
         "v2.4": {
-          "start": "2022-02-07",
-          "end": "2023-11-03",
-          "codename": ""
+          start: "2022-02-07",
+          end: "2023-11-03",
+          codename: "",
         },
         "v2.5": {
-          "start": "2023-02-28",
-          "end": "2024-02-01",
-          "codename": ""
+          start: "2023-02-28",
+          end: "2024-02-01",
+          codename: "",
         },
         "v2.6": {
-          "start": "2023-03-01",
-          "lts": "2023-05-22",
-          "maintenance": "2024-01-23",
-          "end": "2024-05-30",
-          "codename": ""
+          start: "2023-03-01",
+          lts: "2023-05-22",
+          maintenance: "2024-01-23",
+          end: "2024-05-30",
+          codename: "",
         },
         "v2.7": {
-          "start": "2023-05-29",
-          "lts": "2023-12-09",
-          "end": "2024-12-01"
+          start: "2023-05-29",
+          lts: "2023-12-09",
+          end: "2024-12-01",
         },
         "v3.0": {
-          "start": "2024-02-23",
-          "end": "2025-12-30"
-        }
-      }).map(v => ({
+          start: "2024-02-23",
+          end: "2025-12-30",
+        },
+      }).map((v) => ({
         name: v[0],
-        ...v[1]
-      }))
+        ...v[1],
+      })),
     },
+    detailUrl: "https://releases.libkungfu.cc/detail.html",
     copyright: {
       year: "2017 - 2024",
       company: "北京功夫源科技发展有限责任公司",
@@ -155,6 +158,7 @@ const items = [
       disclaimerUrl: "https://www.kungfu-trader.com/index.php/disclaimer/",
       bgcolor: "transparent",
       color: "#343434",
+      docUrl: "https://docs.libkungfu.cc",
     },
   },
 ];

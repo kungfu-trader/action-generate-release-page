@@ -37,15 +37,15 @@ exports.generate = async (argv) => {
   const fileName = path.join(outputDir, "index.html");
   console.log(`Writing release page to ${fileName}`);
   fs.writeFileSync(fileName, output);
-  // const latest = sortBy(list.stables, "weight")[1];
-  // if (latest) {
-  //   fs.writeFileSync(
-  //     path.join(outputDir, "meta.json"),
-  //     JSON.stringify({
-  //       latest: await getDownloadList(latest),
-  //     })
-  //   );
-  // }
+  const latest = sortBy(list.stables, "weight")[0];
+  if (latest) {
+    fs.writeFileSync(
+      path.join(outputDir, "meta.json"),
+      JSON.stringify({
+        latest: await getDownloadList(latest),
+      })
+    );
+  }
 };
 
 const getDownloadList = async (latest) => {
@@ -68,7 +68,7 @@ const getDownloadList = async (latest) => {
         linux_rpm: urls.find((v) => v.includes("linux-") && v.endsWith(".rpm")),
       };
     })
-    .catch(() => "");
+    .catch((e) => console.log(e));
 };
 
 const getVersionList = async (argv) => {
@@ -104,17 +104,19 @@ const getVersionList = async (argv) => {
 
 const createVersionItem = (argv, version, meta, len) => {
   const semverList = version.split(".");
-  const coreSemverList = meta.coreVersion ? meta.coreVersion.split(".") : null;
+  const coreSemverList = version.split(".");
   return {
     ...meta,
     version,
-    url: `${argv.baseUrl}/${
-      argv.useArtifactName ? argv.product + "/" : ""
-    }${getCurrentVersion(version)}/index.html`,
+    url: argv.detailUrl
+      ? `${argv.detailUrl}?version=${version}`
+      : `${argv.baseUrl}/${
+          argv.useArtifactName ? argv.product + "/" : ""
+        }${getCurrentVersion(version)}/index.html`,
     weight: getWeightingNumber(version, len),
     parentId: `${semverList[0]}.${semverList[1]}`,
     docUrl: coreSemverList
-      ? `https://docs.kungfu-trader.com/${coreSemverList[0]}.${coreSemverList[1]}/index.html`
+      ? `${argv.docUrl}/${coreSemverList[0]}.${coreSemverList[1]}/index.html`
       : null,
   };
 };
