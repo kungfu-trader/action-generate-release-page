@@ -26336,7 +26336,7 @@ const items = [
       {
         title: "github",
         icon: "https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/github-mark-white.png",
-        url: "https://github.com/kungfu-trader",
+        url: "https://github.com/kungfu-origin/kungfu",
         target: "_blank",
       },
     ],
