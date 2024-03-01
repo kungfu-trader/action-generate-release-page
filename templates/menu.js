@@ -158,8 +158,8 @@ const items = [
       disclaimerUrl: "https://www.kungfu-trader.com/index.php/disclaimer/",
       bgcolor: "transparent",
       color: "#343434",
-      docUrl: "https://docs.libkungfu.cc",
     },
+    docUrl: "https://docs.libkungfu.cc",
   },
 ];
 

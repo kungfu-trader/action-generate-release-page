@@ -228,7 +228,6 @@ const getVersionList = async (argv) => {
 
 const createVersionItem = (argv, version, meta, len) => {
   const semverList = version.split(".");
-  const coreSemverList = version.split(".");
   const url = `${argv.baseUrl}/${
     argv.useArtifactName ? argv.product + "/" : ""
   }${getCurrentVersion(version)}/index.html`;
@@ -239,8 +238,8 @@ const createVersionItem = (argv, version, meta, len) => {
     relUrl: url,
     weight: getWeightingNumber(version, len),
     parentId: `${semverList[0]}.${semverList[1]}`,
-    docUrl: coreSemverList
-      ? `${argv.docUrl}/${coreSemverList[0]}.${coreSemverList[1]}/index.html`
+    docUrl: argv.docUrl
+      ? `${argv.docUrl}/${semverList[0]}.${semverList[1]}/index.html`
       : null,
   };
 };
@@ -26392,8 +26391,8 @@ const items = [
       disclaimerUrl: "https://www.kungfu-trader.com/index.php/disclaimer/",
       bgcolor: "transparent",
       color: "#343434",
-      docUrl: "https://docs.libkungfu.cc",
     },
+    docUrl: "https://docs.libkungfu.cc",
   },
 ];
 
