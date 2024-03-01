@@ -26319,7 +26319,7 @@ const items = [
     menu: [
       {
         title: "文档",
-        url: "https://docs.kungfu-trader.com/latest/index.html",
+        url: "https://docs.libkungfu.cc/latest/index.html",
         target: "_blank",
       },
       {
