@@ -50,7 +50,7 @@ exports.generate = async (argv) => {
 
 const getDownloadList = async (latest) => {
   return axios
-    .get(latest.url)
+    .get(latest.relUrl)
     .then((res) => {
       const urls = [];
       const $ = cheerio.load(res.data);
@@ -105,14 +105,14 @@ const getVersionList = async (argv) => {
 const createVersionItem = (argv, version, meta, len) => {
   const semverList = version.split(".");
   const coreSemverList = version.split(".");
+  const url = `${argv.baseUrl}/${
+    argv.useArtifactName ? argv.product + "/" : ""
+  }${getCurrentVersion(version)}/index.html`;
   return {
     ...meta,
     version,
-    url: argv.detailUrl
-      ? `${argv.detailUrl}?version=${version}`
-      : `${argv.baseUrl}/${
-          argv.useArtifactName ? argv.product + "/" : ""
-        }${getCurrentVersion(version)}/index.html`,
+    url: argv.detailUrl ? `${argv.detailUrl}?version=${version}` : url,
+    relUrl: url,
     weight: getWeightingNumber(version, len),
     parentId: `${semverList[0]}.${semverList[1]}`,
     docUrl: coreSemverList
