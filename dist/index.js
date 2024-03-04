@@ -135,10 +135,18 @@ const { Octokit } = __nccwpck_require__(5375);
 
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
-  const { template, meta } = getTemplate(argv);
-  const list = await getVersionList({ ...argv, ...meta });
+  const outputDir = getOutputDir(argv);
+  const result = await generateHTML(argv, outputDir);
+  if (result) {
+    await generateMetaData(outputDir, result.list?.stables);
+  }
+};
+
+const generateHTML = async (argv, outputDir) => {
+  const { template, config } = getTemplate(argv);
+  const list = await getVersionList({ ...argv, ...config });
   const { readme = "" } = await getRepoInfo(argv);
-  if (!list) {
+  if (!list || !template || !config) {
     return;
   }
   const output = mustache.render(template, {
@@ -149,14 +157,17 @@ exports.generate = async (argv) => {
     prereleases: JSON.stringify(list.prereleases),
     readme,
     title: argv.title || argv.product,
-    ...meta,
+    ...config,
   });
-  const outputDir = getOutputDir(argv);
   console.log(`Writing release page to ${outputDir}`);
   const fileName = path.join(outputDir, "index.html");
   console.log(`Writing release page to ${fileName}`);
   fs.writeFileSync(fileName, output);
-  const latest = sortBy(list.stables, "weight")[0];
+  return { list };
+};
+
+const generateMetaData = async (outputDir, items) => {
+  const latest = sortBy(items, "weight")[0];
   if (latest) {
     fs.writeFileSync(
       path.join(outputDir, "meta.json"),
@@ -168,15 +179,20 @@ exports.generate = async (argv) => {
 };
 
 const getTemplate = (argv) => {
+  let product = argv.product;
+  const isTemplateExist = fs.existsSync(`./templates/${product}/template.html`);
+  if (!isTemplateExist) {
+    product = "kungfu-trader";
+  }
   const template = fs.readFileSync(
-    __nccwpck_require__.ab + "templates/" + argv.product + '/template.html',
+    __nccwpck_require__.ab + "template.html",
     "utf-8"
   );
   const config = fs.readFileSync(
-    __nccwpck_require__.ab + "templates/" + argv.product + '/config.json',
+    __nccwpck_require__.ab + "config.json",
     "utf-8"
   );
-  return { template, meta: JSON.parse(config) };
+  return { template, config: JSON.parse(config) };
 };
 
 const getDownloadList = async (latest) => {
