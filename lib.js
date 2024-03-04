@@ -8,15 +8,10 @@ const marked = require("marked");
 const sortBy = require("lodash.sortby");
 const { getTableRecords } = require("./airtable");
 const { Octokit } = require("@octokit/rest");
-const getMenu = require("./templates/menu");
 
 exports.generate = async (argv) => {
   console.log(`Generating release page for ${argv.product}`);
-  const template = fs.readFileSync(
-    path.join(__dirname, "./templates/release.html"),
-    "utf-8"
-  );
-  const meta = getMenu(argv.product);
+  const { template, meta } = getTemplate(argv);
   const list = await getVersionList({ ...argv, ...meta });
   const { readme = "" } = await getRepoInfo(argv);
   if (!list) {
@@ -46,6 +41,18 @@ exports.generate = async (argv) => {
       })
     );
   }
+};
+
+const getTemplate = (argv) => {
+  const template = fs.readFileSync(
+    path.join(__dirname, `./templates/${argv.product}/template.html`),
+    "utf-8"
+  );
+  const config = fs.readFileSync(
+    path.join(__dirname, `./templates/${argv.product}/config.json`),
+    "utf-8"
+  );
+  return { template, meta: JSON.parse(config) };
 };
 
 const getDownloadList = async (latest) => {

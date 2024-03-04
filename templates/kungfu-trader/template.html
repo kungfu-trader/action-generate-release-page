@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+    <title>历史版本 - 功夫量化</title>
     <meta name="theme-color" content="#e9ecef">
     <link href="https://cdn.staticfile.org/layui/2.8.18/css/layui.min.css" rel="stylesheet">
     <script src="https://cdn.staticfile.org/layui/2.8.18/layui.min.js"></script>
@@ -224,6 +224,7 @@
             .nav-menu-link-icon {
                 filter: invert(100%);
             }
+
             .custom-logo-wrap {
                 margin-left: 0;
             }
@@ -298,17 +299,12 @@
 </head>
 
 <body>
-    <header class="header" style="position: {{logo.position}}">
+    <header class="header" style="position: fixed">
         <div class="header-content">
             <div class="container">
-                <a class="custom-logo-wrap" href="{{{homePage}}}" style="height: {{logo.wrap}}px">
-                    <img
-                        width="300"
-                        src="{{{logo.url}}}"
-                        height="{{logo.height}}"
-                        style="margin-top: {{logo.offset}}px"
-                        class="custom-logo" alt=""
-                    >
+                <a class="custom-logo-wrap" href="{{{homePage}}}" style="height: 79px">
+                    <img width="300" src="{{{logo.url}}}" height="82" style="margin-top: -2px" class="custom-logo"
+                        alt="">
                 </a>
                 <div class="nav-icon-wrap" id="toggle-nav">
                     <svg id="icon-open" style="display: block;" class="nav-icon" version="1.1"
@@ -377,36 +373,6 @@
     <section class="container panel">
         <div class="description">
             <h1>{{productName}}</h1>
-            {{#workingScheule}}
-            <div class="release-schedule" style="padding-top: 1em;">
-                <h3>发布规划</h3>
-                <table class="layui-table" style="margin: 1em 0;">
-                    <thead>
-                        <tr>
-                            <th>Release</th>
-                            <th>Codename</th>
-                            <th>Initial Release</th>
-                            <th>End-of-life</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#workingScheule.data}}
-                        <tr>
-                            <td>{{name}}</td>
-                            <td>{{Codename}}</td>
-                            <td>{{start}}</td>
-                            <td>{{end}}</td>
-                        </tr>
-                        {{/workingScheule.data}}
-                    </tbody>
-                </table>
-                <h5>发布日期详情</h5>
-                <img
-                    src="https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png"
-                    style="display: block; width: 80%;margin: 10px auto 0;"
-                />
-            </div>
-            {{/workingScheule}}
             <div id="readme">{{{readme}}}</div>
         </div>
         <div id="table-container" style="opacity: 0;">
@@ -416,7 +382,7 @@
             <div id="prereleases-table"></div>
         </div>
     </section>
-    <footer class="footer" style="background-color: {{copyright.bgcolor}}; color: {{copyright.color}}">
+    <footer class="footer">
         <div style="max-width: 1200px; margin: 0 auto;">
             <div class="ast-footer-copyright">
                 <div style="display: inline-block; text-align: justify;">
@@ -446,7 +412,6 @@
             </div>
         </div>
     </footer>
-
     <script>
         const cols = [[
             {
@@ -495,7 +460,6 @@
                 });
             });
         };
-
         function init() {
             const stables = JSON.parse('{{{stables}}}');
             const prereleases = JSON.parse('{{{prereleases}}}');
