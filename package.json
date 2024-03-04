@@ -6,7 +6,7 @@
   "author": "Keren Dong",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "yarn format && yarn dist",
+    "build": "esbuild index.js --bundle --minify --outfile=dist/index.js --platform=node",
     "clean": "rimraf build",
     "dist": "ncc build index.js",
     "format": "prettier --write --parser typescript \"*.js\"",
@@ -32,6 +32,7 @@
     "@ls-lint/ls-lint": "^2.1.0",
     "@typescript-eslint/parser": "^6.7.2",
     "@vercel/ncc": "^0.38.0",
+    "esbuild": "^0.19.2",
     "eslint": "^8.49.0",
     "prettier": "~2.7.0",
     "prettier-eslint-cli": "^7.1.0",
