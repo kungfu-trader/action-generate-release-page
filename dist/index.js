@@ -139,6 +139,7 @@ exports.generate = async (argv) => {
   const result = await generateHTML(argv, outputDir);
   if (result) {
     await generateMetaData(outputDir, result.list?.stables);
+    generateDetail(argv, outputDir);
   }
 };
 
@@ -178,9 +179,22 @@ const generateMetaData = async (outputDir, items) => {
   }
 };
 
+const generateDetail = (argv, outputDir) => {
+  const link = __nccwpck_require__.ab + "templates/" + argv.product + '/detail.html';
+  const isTemplateExist = fs.existsSync(link);
+  if (isTemplateExist) {
+    const detailTemplate = fs.readFileSync(link, "utf-8");
+    const output = mustache.render(detailTemplate, {});
+    const fileName = path.join(outputDir, "detail.html");
+    fs.writeFileSync(fileName, output);
+  }
+};
+
 const getTemplate = (argv) => {
   let product = argv.product;
-  const isTemplateExist = fs.existsSync(`./templates/${product}/template.html`);
+  const isTemplateExist = fs.existsSync(
+    __nccwpck_require__.ab + "templates/" + product + '/template.html'
+  );
   if (!isTemplateExist) {
     product = "kungfu-trader";
   }
