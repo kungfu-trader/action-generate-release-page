@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,11 +67,12 @@
 
         .header-content {
             background-color: rgba(0, 0, 0, .8);
+            overflow: hidden;
         }
 
         .custom-logo-wrap {
             display: block;
-            margin-left: 28px;
+            margin-left: 30px;
         }
 
         .custom-logo {
@@ -91,7 +93,7 @@
             font-size: 18px;
             display: flex;
             justify-content: flex-end;
-            padding-right: 34px;
+            padding-right: 30px;
         }
 
         .nav-menu-item {
@@ -99,18 +101,19 @@
             overflow: visible;
             margin: 0;
             position: relative;
+            padding-top: 0px;
         }
 
         .nav-menu-item .nav-menu-link {
             display: block;
             color: #ffffff;
             transition: all .3s ease;
-            padding: 0 18px;
+            padding: 0 32px 0 18px;
             white-space: nowrap;
         }
 
         .nav-menu-item:last-child .nav-menu-link {
-            padding: 0 0 0 20px;
+            padding: 0 0 0 14px;
         }
 
         .nav-menu-item .nav-menu-link.active {
@@ -129,6 +132,7 @@
 
         .nav-menu-item .nav-menu-link-icon {
             height: 30px;
+            margin-top: -4px;
         }
 
         .nav-menu-item .drop-down-list {
@@ -221,6 +225,10 @@
             }
             .custom-logo-wrap {
                 margin-left: 0;
+            }
+
+            .nav-menu-item .nav-menu-link-icon {
+                margin-left: 4px;
             }
         }
 
@@ -358,7 +366,7 @@
         <div class="header-content">
             <div class="container">
                 <a class="custom-logo-wrap" href="{{{homePage}}}" style="height: 72px">
-                    <img width="300" src="{{{logo.url}}}" height="85" style="margin-top: -8px" class="custom-logo"
+                    <img width="300" src="{{{logo.url}}}" height="85" style="margin-top: -7px" class="custom-logo"
                         alt="">
                 </a>
                 <div class="nav-icon-wrap" id="toggle-nav">
@@ -506,6 +514,9 @@
             });
             obj.contentWindow.document.querySelectorAll('footer').forEach(element => {
                 element.style.display = 'none';
+            });
+            obj.contentWindow.document.querySelectorAll('panel').forEach(element => {
+                element.style.marginTop = '0';
             });
             obj.contentWindow.document.body.style.overflow = 'hidden';
             obj.contentWindow.document.querySelectorAll('h2').forEach(element => {

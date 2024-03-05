@@ -1,11 +1,7 @@
 {
     "homePage": "https://www.libkungfu.cc",
     "logo": {
-        "url": "https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/cropped-核心库3.png",
-        "height": 85,
-        "offset": -8,
-        "wrap": 72,
-        "position": "absolute"
+        "url": "https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/cropped-核心库3.png"
     },
     "menu": [
         {
