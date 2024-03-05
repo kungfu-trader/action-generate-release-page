@@ -515,9 +515,6 @@
             obj.contentWindow.document.querySelectorAll('footer').forEach(element => {
                 element.style.display = 'none';
             });
-            obj.contentWindow.document.querySelectorAll('panel').forEach(element => {
-                element.style.marginTop = '0';
-            });
             obj.contentWindow.document.body.style.overflow = 'hidden';
             obj.contentWindow.document.querySelectorAll('h2').forEach(element => {
                 element.innerText = element.innerText.replace('artifact-', '');
