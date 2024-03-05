@@ -177,6 +177,9 @@
         .nav-wrap {
             display: flex;
         }
+        .release-schedule-chart {
+            display: block; width: 80%;margin: 10px auto 0;
+        }
 
         @media (max-width: 922px) {
             .nav-menu {
@@ -227,6 +230,9 @@
 
             .custom-logo-wrap {
                 margin-left: 0;
+            }
+            .release-schedule-chart {
+                width: 100%;
             }
         }
 
@@ -398,8 +404,8 @@
                     </tbody>
                 </table>
                 <h5>发布日期详情</h5>
-                <img src="https://s3.cn-northwest-1.amazonaws.com.cn/www.libkungfu.cc/uploads/2024/02/working-schedule.png"
-                    style="display: block; width: 80%;margin: 10px auto 0;" />
+                <img src="{{{workingScheule.imageUrl}}}"
+                    class="release-schedule-chart"/>
             </div>
             {{/workingScheule}}
             <div id="readme">{{{readme}}}</div>
