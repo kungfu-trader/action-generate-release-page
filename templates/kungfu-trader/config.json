@@ -8,6 +8,7 @@
         "position": "fixed"
     },
     "useArtifactName": true,
+    "detailUrl": "https://releases.kungfu-trader.com/static/detail.html",
     "menu": [
         {
             "title": "首页",
