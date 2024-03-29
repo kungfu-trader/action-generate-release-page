@@ -19,6 +19,12 @@
             "class": "active",
             "children": [
                 {
+                    "title": "天山算力",
+                    "url": "https://www.kungfu-trader.com/index.php/tianshan/",
+                    "target": "_blank",
+                    "class": ""
+                },
+                {
                     "title": "解决方案",
                     "url": "https://www.kungfu-trader.com/index.php/solution/",
                     "target": "_blank",

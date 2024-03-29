@@ -136,11 +136,22 @@
 
         .nav-menu-item .drop-down-list {
             position: absolute;
-            top: 100%;
+            top: 55px;
             left: 0;
             background-color: rgba(0, 0, 0, .8);
             display: none;
             transition: display 2s;
+        }
+
+        .nav-menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            background-color: transparent;
+            z-index: 1;
         }
 
         .nav-menu-item:hover .drop-down-list {
