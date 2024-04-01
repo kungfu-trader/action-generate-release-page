@@ -143,7 +143,7 @@
             transition: display 2s;
         }
 
-        .nav-menu-item::before {
+        .nav-menu-item .nav-menu-hack {
             content: '';
             position: absolute;
             top: 0;
@@ -405,6 +405,7 @@
                                 </svg>
                             </span>
                         </span>
+                        <div class="nav-menu-hack"></div>
                         <div class="drop-down-list">
                             <ul>
                                 {{#children}}
