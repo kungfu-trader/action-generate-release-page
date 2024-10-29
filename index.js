@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-const lib = (exports.lib = require("./lib.js"));
+const lib = (exports.lib = require("./lib"));
 const core = require("@actions/core");
 // const github = require("@actions/github");
 
@@ -15,6 +15,9 @@ const main = function () {
     baseId: core.getInput("base-id"),
     bucketRelease: core.getInput("bucket-release"),
     exclude: core.getInput("exclude"),
+    productName: core.getInput("product-name"),
+    repo: core.getInput("repo"),
+    title: core.getInput("title"),
   };
   lib.generate(argv);
 };
