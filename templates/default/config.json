@@ -1,7 +1,7 @@
 {
     "homePage": "https://www.kungfu-trader.com",
     "logo": {
-        "url": "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2024/03/cropped-cropped-WechatIMG121-300x76.png",
+        "url": "https://resources-users.kungfu-trader.com/uploads/2024/03/cropped-cropped-WechatIMG121.png",
         "height": 82,
         "offset": -2,
         "wrap": 79,
@@ -68,7 +68,7 @@
         "miitUrl": "https://beian.miit.gov.cn/#/Integrated/index",
         "mpsCode": "京公网安备11010202010762",
         "mpsUrl": "https://beian.mps.gov.cn/#/query/webSearch?code=11010202010762",
-        "icpIcon": "https://s3.cn-northwest-1.amazonaws.com.cn/users.kungfu-trader.com/uploads/2023/12/logo01.6189a29f1.png",
+        "icpIcon": "https://resources-users.kungfu-trader.com/uploads/2023/12/logo01.6189a29f1.png",
         "agreementUrl": "https://www.kungfu-trader.com/index.php/user_agreement/",
         "privacyPolicyUrl": "https://www.kungfu-trader.com/index.php/privacy_policy/",
         "disclaimerUrl": "https://www.kungfu-trader.com/index.php/disclaimer/"

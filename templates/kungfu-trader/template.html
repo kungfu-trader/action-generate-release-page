@@ -41,11 +41,9 @@
             .container {
                 max-width: 100%;
             }
-
         }
 
         @media (max-width: 922px) {
-
             html,
             body {
                 font-size: 13.68px;
@@ -57,7 +55,6 @@
                 max-width: 1200px;
             }
         }
-
 
         .header {
             background-color: #fff;
@@ -450,6 +447,55 @@
                 }
             }
         ]];
+
+        // 过滤出最新版本
+        function filterLatestVersions(versions) {
+            const versionMap = {
+                'v3.0': { stable: null, alpha: null },
+                'v2.7': { stable: null, alpha: null }
+            };
+
+            versions.forEach(version => {
+                const versionStr = version.version;
+                const isAlpha = versionStr.includes('alpha');
+                const baseVersion = versionStr.split('.')[0] + '.' + versionStr.split('.')[1]; // 获取 vX.Y 部分
+
+                if (versionMap[baseVersion]) {
+                    if (isAlpha) {
+                        // 处理alpha版本
+                        const mainVersionPart = versionStr.split('-')[0]; // 获取vX.Y.Z部分
+                        const alphaPart = versionStr.split('alpha.')[1]; // 获取y值
+                        const mainVersionNum = parseInt(mainVersionPart.split('.')[2]); // 获取Z值
+                        const alphaNum = parseInt(alphaPart);
+                        
+                        // 先比较主版本号(Z)，再比较alpha版本号(y)
+                        if (!versionMap[baseVersion].alpha || 
+                            parseInt(versionMap[baseVersion].alpha.version.split('-')[0].split('.')[2]) < mainVersionNum ||
+                            (parseInt(versionMap[baseVersion].alpha.version.split('-')[0].split('.')[2]) === mainVersionNum && 
+                             parseInt(versionMap[baseVersion].alpha.version.split('alpha.')[1]) < alphaNum)) {
+                            versionMap[baseVersion].alpha = version;
+                        }
+                    } else {
+                        // 处理稳定版
+                        const stableNum = parseInt(versionStr.split('.')[2]);
+                        if (!versionMap[baseVersion].stable || 
+                            parseInt(versionMap[baseVersion].stable.version.split('.')[2]) < stableNum) {
+                            versionMap[baseVersion].stable = version;
+                        }
+                    }
+                }
+            });
+
+            // 合并结果
+            const result = [];
+            Object.keys(versionMap).forEach(key => {
+                if (versionMap[key].stable) result.push(versionMap[key].stable);
+                if (versionMap[key].alpha) result.push(versionMap[key].alpha);
+            });
+
+            return result;
+        }
+
         const createTables = (data, elem) => {
             layui.use('table', function () {
                 const treeTable = layui.treeTable;
@@ -470,9 +516,15 @@
                 });
             });
         };
+
         function init() {
-            const stables = JSON.parse('{{{stables}}}');
-            const prereleases = JSON.parse('{{{prereleases}}}');
+            const allStables = JSON.parse('{{{stables}}}');
+            const allPrereleases = JSON.parse('{{{prereleases}}}');
+            
+            // 过滤出最新版本
+            const stables = filterLatestVersions(allStables);
+            const prereleases = filterLatestVersions(allPrereleases);
+            
             createTables(stables, '#stable-table');
             createTables(prereleases, '#prereleases-table');
             setTimeout(() => document.getElementById('table-container').style.opacity = 1);
