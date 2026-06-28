@@ -4,3 +4,10 @@
 
 # NPM related
 node_modules/
+
+# build related
+build/
+dist/*/
+
+test.js
+scan.js
