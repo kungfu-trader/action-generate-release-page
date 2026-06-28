@@ -4,6 +4,8 @@ description: "Generate Release Page for Kungfu Products"
 inputs:
   token:
     description: "GitHub token"
+  owner:
+    description: "GitHub repository owner"
   apiKey:
     description: "Airtable token"
   product:
