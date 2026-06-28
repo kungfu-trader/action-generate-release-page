@@ -1,11 +1,11 @@
 /* eslint-disable no-restricted-globals */
 const lib = (exports.lib = require("./lib"));
 const core = require("@actions/core");
-// const github = require("@actions/github");
 
 const main = function () {
   const argv = {
     token: core.getInput("token"),
+    owner: core.getInput("owner") || process.env.GITHUB_REPOSITORY?.split("/")[0],
     apiKey: core.getInput("apiKey"),
     product: core.getInput("product"),
     releasePath: core.getInput("release-path"),
