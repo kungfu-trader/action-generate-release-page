@@ -1,6 +1,6 @@
 {
   "name": "@kungfu-trader/action-generate-release-page",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "repository": "https://github.com/kungfu-systems/action-generate-release-page",
   "author": "Keren Dong",
