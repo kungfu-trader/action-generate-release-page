@@ -4,6 +4,8 @@ description: "Generate Release Page for Kungfu Products"
 inputs:
   token:
     description: "GitHub token"
+  owner:
+    description: "GitHub repository owner"
   apiKey:
     description: "Airtable token"
   product:
@@ -39,5 +41,5 @@ inputs:
     default: "历史版本 - 功夫量化"
 
 runs:
-  using: "node20"
+  using: "node24"
   main: "dist/index.js"

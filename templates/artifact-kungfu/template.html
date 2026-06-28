@@ -41,11 +41,9 @@
             .container {
                 max-width: 100%;
             }
-
         }
 
         @media (max-width: 922px) {
-
             html,
             body {
                 font-size: 13.68px;
@@ -57,7 +55,6 @@
                 max-width: 1200px;
             }
         }
-
 
         .header {
             background-color: #fff;
@@ -455,6 +452,96 @@
     </footer>
 
     <script>
+        // 辅助函数：解析版本号为数字数组
+        function parseVersion(version) {
+            const parts = version.replace(/^v/, '')
+                .replace(/-.*$/, '') // 移除预览后缀
+                .split('.')
+                .map(Number);
+            return parts;
+        }
+
+        // 辅助函数：比较两个版本号
+        function compareVersions(a, b) {
+            const v1 = parseVersion(a);
+            const v2 = parseVersion(b);
+            
+            for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
+                const num1 = v1[i] || 0;
+                const num2 = v2[i] || 0;
+                if (num1 !== num2) {
+                    return num1 - num2;
+                }
+            }
+            
+            // 如果主版本号相同，比较预览版本号
+            const aPre = a.includes('-') ? a.split('-')[1] : '';
+            const bPre = b.includes('-') ? b.split('-')[1] : '';
+            
+            if (aPre && bPre) {
+                return aPre.localeCompare(bPre);
+            }
+            
+            return aPre ? 1 : -1;
+        }
+
+        // 筛选稳定版 - 只保留 v3.0.x 和 v2.7.x 中x最大的版本
+        function filterStableVersions(versions) {
+            const versionMap = {};
+            
+            versions.forEach(v => {
+                const version = v.version;
+                if (version.startsWith('v3.0.') || version.startsWith('v2.7.')) {
+                    const base = version.substring(0, version.lastIndexOf('.') + 1);
+                    if (!versionMap[base] || compareVersions(version, versionMap[base].version) > 0) {
+                        versionMap[base] = v;
+                    }
+                }
+            });
+            
+            return Object.values(versionMap).sort((a, b) => compareVersions(b.version, a.version));
+        }
+
+        // 筛选预览版 - 选择最大的x的版本中y最大的哪个版本
+        function filterPrereleaseVersions(versions) {
+            const mainVersions = {};
+            
+            versions.forEach(v => {
+                const version = v.version;
+                if (version.includes('-alpha') || version.includes('-beta') || version.includes('-rc')) {
+                    const mainVersion = version.split('-')[0];
+                    const mainParts = parseVersion(mainVersion);
+                    
+                    if (!mainVersions[mainParts[0]] || 
+                        compareVersions(mainVersion, mainVersions[mainParts[0]].mainVersion) > 0 ||
+                        (mainVersion === mainVersions[mainParts[0]].mainVersion && 
+                         compareVersions(version, mainVersions[mainParts[0]].version) > 0)) {
+                        
+                        mainVersions[mainParts[0]] = {
+                            version: version,
+                            mainVersion: mainVersion,
+                            data: v
+                        };
+                    }
+                }
+            });
+            
+            // 只保留每个主版本号(v3.0)的最新预览版
+            const latestByMainVersion = {};
+            Object.values(mainVersions).forEach(item => {
+                const main = item.mainVersion.split('.').slice(0, 2).join('.');
+                if (!latestByMainVersion[main] || 
+                    compareVersions(item.mainVersion, latestByMainVersion[main].mainVersion) > 0) {
+                    latestByMainVersion[main] = item;
+                }
+            });
+            
+            // 从这些版本中选择预览号最大的
+            return Object.values(latestByMainVersion)
+                .sort((a, b) => compareVersions(b.version, a.version))
+                .map(item => item.data);
+        }
+
         const cols = [[
             {
                 field: 'version', title: 'Version', minWidth: 200, sort: true, templet: function (b) {
@@ -476,12 +563,13 @@
                 field: 'action', title: 'Action', width: 160, templet: function (b) {
                     const doc = b.docUrl ? `<a href="${b.docUrl}" target="_blank">文档</a>` : ''
                     return `
-                                <a href="${b.url}" target="_blank" style="margin-right: 16px;">下载</a>
-                                ${doc}
-                            `
+                        <a href="${b.url}" target="_blank" style="margin-right: 16px;">下载</a>
+                        ${doc}
+                    `
                 }
             }
         ]];
+
         const createTables = (data, elem) => {
             layui.use('table', function () {
                 const treeTable = layui.treeTable;
@@ -504,8 +592,9 @@
         };
 
         function init() {
-            const stables = JSON.parse('{{{stables}}}');
-            const prereleases = JSON.parse('{{{prereleases}}}');
+            const stables = filterStableVersions(JSON.parse('{{{stables}}}'));
+            const prereleases = filterPrereleaseVersions(JSON.parse('{{{prereleases}}}'));
+            
             createTables(stables, '#stable-table');
             createTables(prereleases, '#prereleases-table');
             setTimeout(() => document.getElementById('table-container').style.opacity = 1);
